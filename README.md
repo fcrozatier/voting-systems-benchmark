@@ -74,6 +74,7 @@ This mean the comparison graph has diameter $\frac{2^{10}}{2^9}=2$ so it's almos
 A naive way to select the best nodes would be to pick the ones with the most wins.
 
 Following the previous example, after step 9 each node has order 10 and the probability for a given node to win 9 or 10 over 10 comparisons is, using a binomial distribution with parameters $n=10$ $p=\frac{1}{2}$:
+
 $$
 \frac{1}{2^{10}}\left(\binom{10}{9}+\binom{10}{10}\right)=\frac{11}{2^{10}}
 $$
