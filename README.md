@@ -1,12 +1,12 @@
 # NodeRank+
 
-Here I propose an algorithm for massive comptetion judging. See the [contributing](#contributing) section.
+Here I propose an algorithm for massive competion judging. See the [contributing](#contributing) section.
 
 In a big competition context, a few judges cannot rank all the entries, so we need a **peer review** algorithm.
 
 Also, assigning an absolute number to an entry is quite hard, and we often need to reevaluate the number after judging a few entries. It is far easier to estimate whether an entry is better than another entry. So the ranking will be based on **pairwise comparisons**, following other algorithms like [Gavel](https://www.anishathalye.com/2015/03/07/designing-a-better-judging-system/)
 
-In this way entries correspond quite naturally to the nodes of a directed graph where a comparison between two nodes is an arrow pointing to the better entry. The algorithm needs to describe how to construct this **comparison graph** in order for it to have nice properties, and how to rank entries from this graph.
+In this way entries correspond quite naturally to the nodes of a directed graph where a comparison between two nodes is an arrow pointing to the better entry. The algorithm needs to describe how to construct this **comparison graph** and how to rank entries from this graph.
 
 ## Principles
 
