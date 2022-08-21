@@ -101,7 +101,7 @@ It would be nice to avoid this situation by design while keeping the other prope
 
 ## NodeRank+
 
-Comming soon!
+Coming soon!
 
 
 ## Contributing
