@@ -32,6 +32,12 @@ This paragraph is a general overview of the algorithm, see the [details](details
 
 Let say we have N nodes and assume this is a big number.
 
+
+
+https://user-images.githubusercontent.com/48696601/186481367-c9e00009-77ee-4439-a22a-63dd4cd15114.mp4
+
+
+
 ### Step 0
 
 Randomly order the nodes in a list of size N and create a cycle graph from this list comparing nodes 0 and 1, nodes 1 and 2 etc. until nodes N-1 and 0.
