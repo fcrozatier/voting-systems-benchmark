@@ -22,60 +22,63 @@ Since we are talking about a peer review algorithm, these properties are realist
 
 The best graph satisfying these properties is the **complete graph** which has diameter 1 with all nodes connected.
 
-A complete graph with $N$ nodes has $\frac{N(N-1)}{2}$ arrows so in practice we cannot expected to construct this graph, since each of the $N$ competitors would need to rank about $\frac{N-1}{2}$ entries which in pratice is too much.
+A complete graph with $N$ nodes has $\frac{N(N-1)}{2}$ arrows so in practice we cannot expected to construct this graph, since each of the $N$ competitors would need to rank about $\frac{N-1}{2}$ entries which in pratice is way too much.
 
-So the principles above allow to relax the constaints of a complete graph, while keeping nice properties. Indeed the following algorithm creates a sequence of graphs with $N$ nodes that converges towards a complete graph after many iterations. The diameter is roughly divided by 2 after each iteration.
+So the principles above allow to relax the constaints of a complete graph, while keeping nice properties. Indeed the following algorithm creates a graph with $N$ nodes whose diameter is roughly divided by 2 after each iteration.
 
-## Constructing the graph
+## Comparison graph overview
 
-Let say we have N nodes and assume this is a big number. The purpose of this discussion is a general explanation of the algorithm, specific details for when N is odd or even, or when $\frac{N}{2}$ is odd or even etc. are left to the implementation since they only marginally affect the general results.
+This paragraph is a general overview of the algorithm, see the [details](details.md) for more.
+
+Let say we have N nodes and assume this is a big number.
+
+### Step 0
+
+Randomly order the nodes in a list of size N and create a cycle graph from this list comparing nodes 0 and 1, nodes 1 and 2 etc. until nodes N-1 and 0.
 
 ### Step 1
 
-For the first iteration, randomly order the nodes in a list of size N and create a cycle graph from this list comparing nodes 0 and 1, nodes 1 and 2 etc. until nodes N-1 and 0.
+Compare nodes $i$ and $i + \frac{N}{2}$ for all $i$.
 
-![Cycle with 10 nodes](assets/a.jpg)
+This step is nuanced in the [details](details.md), it is the only one with two cases $N$ even or odd. But the idea is to compare nodes far appart.
 
-After this step, each node has order 2, there are N arrows and the graph has diameter $\frac{N}{2}$. Some nodes win both of their comparisons, other win only one while other loose both.
-
-Notice we can easily model the probabilities of the number of wins for a given node with a binomial distribution with parameters $n=2$ $p=\frac{1}{2}$. This will nicely generalize in the next steps.
-
-### Step 2
-
-From now on, each step will reduce the diameter by a factor 2, while keeping the [4 properties](#principles) true.
-
-The graph is symmetric and will stay symmetric so we can reason about its diameter by focusing on a single point. Pick node 0. Comparing it to node $\frac{N}{2}$ creates two cycles of diameter $\frac{N}{4}$. This node is now at distance at most $\frac{N}{4}$ of any other node.
-
-![Compare node 0 and node N/2](assets/b.jpg)
-
-Add a similar comparison for all nodes by comparing node $i$ and node $i+\frac{N}{2}$ and the resulting graph has diameter $\frac{N}{4}$. The exact value is $\mathrm{ceil}(\frac{N}{4})$.
-
-
-![Iteration 2](assets/c.jpg)
-
-This step adds $\frac{N}{2}$ new arrows. At the end each node has order 3, and the number of wins of a given node follows the binomial distribution with parameters $n=3$ $p=\frac{1}{2}$
-
-### Step 3
-
-In step 2 node 0 was compared to node $\frac{N}{2}$ creating two cycles in which node 0 is at distance $\frac{N}{4}$ of any other node. Compare node 0 with node $\frac{N}{4}$. This divides the left cycle in two smaller cycles in which node 0 is at distance at most $\frac{N}{8}$ of any other nodes.
-
-![Compare node 0 with node N/4](assets/d.jpg)
-
-Add a similar comparison for all nodes by comparing node $i$ and node $i+\frac{N}{2}$. In particular comparing node $N-\frac{N}{4}$ with node 0 will take care of the right cycle mentionned just above. So node 0 is at distance at most $\frac{N}{8}$ of any other node. By symmetry the graph has diameter $\frac{N}{8}$.
-
-This step adds $\frac{N}{2}$ new arrows. At the end each node has order 4, and the number of wins of a given node follows the binomial distribution with parameters $n=4$ $p=\frac{1}{2}$
 
 ### Step $k$
 
-Continue in a similar fashion and compare nodes $i$ and $i+\frac{N}{2^{k-1}}$ for all $i$.
+Compare nodes $i$ and $i + \frac{N}{2^k}$ for all $i$.
 
-By the end of this step, the graph has $\frac{N}{2}$ new arrows, its diameter is $\frac{N}{2^k}$ and each node has order $k+1$.
+Continue while $\mathrm{ceil}(\frac{N}{2^k}) > 1$ then start another round at step 0, doubling the comparisons etc. In pratice there will be only one round. An equivalent condition is $k < \log_2(N)$
+
 
 ## Example
 
+Starting with a graph with $2^{13}=8192$ nodes, the sequence of diameters of the comparison graph is:
+
+<div style="display: flex; justify-content: center;">
+
+|  step   | diameter |
+| :-----: | :------: |
+| step 0  |   4096   |
+| step 1  |   2048   |
+| step 2  |   1025   |
+| step 3  |   513    |
+| step 4  |   258    |
+| step 5  |   130    |
+| step 6  |    67    |
+| step 7  |    35    |
+| step 8  |    20    |
+| step 9  |    12    |
+| step 10 |    9     |
+| step 11 |    7     |
+| step 12 |    7     |
+
+</div>
+
+Notice the diameter is not exactly divided by two, and cannot go below 7 since at step 13 we would connect nodes $i$ and $i + N/N = i + 1$ which were already connected at step 0.
+
+<!-- TODO -->
 If a competition has about ~1k competitors (let's say $2^{10}$ for convenience), and each competitor contributes 5 comparisons, then we can iterate the algorithm up to step 9 since each step after the first only needs half the competitors to complete.
 
-This mean the comparison graph has diameter $\frac{2^{10}}{2^9}=2$ so it's almost a **complete graph**
 
 ## Naive ranking
 
