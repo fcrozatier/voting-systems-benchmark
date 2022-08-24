@@ -38,16 +38,16 @@ Randomly order the nodes in a list of size N and create a cycle graph from this 
 
 ### Step 1
 
-Compare nodes $i$ and $i + \frac{N}{2}$ for all $i$.
+Compare nodes $i$ and $i+\frac{N}{2}$ for all $i$.
 
 This step is nuanced in the [details](details.md), it is the only one with two cases $N$ even or odd. But the idea is to compare nodes far appart.
 
 
 ### Step $k$
 
-Compare nodes $i$ and $i + \frac{N}{2^k}$ for all $i$.
+Compare nodes $i$ and $i+\frac{N}{2^k}$ for all $i$.
 
-Continue while $\mathrm{ceil}(\frac{N}{2^k}) > 1$ then start another round at step 0, doubling the comparisons etc. In pratice there will be only one round. An equivalent condition is $k < \log_2(N)$
+Continue while $\mathrm{ceil}(\frac{N}{2^k})>1$ then start another round at step 0, doubling the comparisons etc. In pratice there will be only one round. An equivalent condition is $k<\log_2(N)$
 
 
 ## Example
@@ -74,7 +74,7 @@ Starting with a graph with $2^{13}=8192$ nodes, the sequence of diameters of the
 
 </div>
 
-Notice the diameter is not exactly divided by two, and cannot go below 7 since at step 13 we would connect nodes $i$ and $i + N/N = i + 1$ which were already connected at step 0.
+Notice the diameter is not exactly divided by two, and cannot go below 7 since at step 13 we would connect nodes $i$ and $i+N/N=i+1$ which were already connected at step 0.
 
 <!-- TODO -->
 If a competition has about ~1k competitors (let's say $2^{10}$ for convenience), and each competitor contributes 5 comparisons, then we can iterate the algorithm up to step 9 since each step after the first only needs half the competitors to complete.
