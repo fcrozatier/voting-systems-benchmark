@@ -22,9 +22,9 @@ Since we are talking about a peer review algorithm, these properties are realist
 
 The best graph satisfying these properties is the **complete graph** which has diameter 1 with all nodes connected.
 
-A complete graph with $N$ nodes has $\frac{N(N-1)}{2}$ arrows so in practice we cannot expected to construct this graph, since each of the $N$ competitors would need to rank about $\frac{N-1}{2}$ entries which in pratice is way too much.
+A complete graph with N nodes has $\frac{N(N-1)}{2}$ arrows so in practice we cannot expected to construct this graph, since each of the N competitors would need to rank about $\frac{N-1}{2}$ entries which in pratice is way too much.
 
-So the principles above allow to relax the constaints of a complete graph, while keeping nice properties. Indeed the following algorithm creates a graph with $N$ nodes whose diameter is roughly divided by 2 after each iteration.
+So the principles above allow to relax the constaints of a complete graph, while keeping nice properties. Indeed the following algorithm creates a graph with N nodes whose diameter is roughly divided by 2 after each iteration.
 
 ## Comparison graph overview
 
@@ -38,14 +38,14 @@ Randomly order the nodes in a list of size N and create a cycle graph from this 
 
 ### Step 1
 
-Compare nodes $i$ and $i+\frac{N}{2}$ for all $i$.
+Compare nodes i and $i+\frac{N}{2}$
 
-This step is nuanced in the [details](details.md), it is the only one with two cases $N$ even or odd. But the idea is to compare nodes far appart.
+This step is nuanced in the [details](details.md), it is the only one with two cases N even or odd. But the idea is to compare nodes far appart.
 
 
 ### Step $k$
 
-Compare nodes $i$ and $i+\frac{N}{2^k}$ for all $i$.
+Compare nodes i and $i+\frac{N}{2^k}$ for all i.
 
 Continue while $\mathrm{ceil}(\frac{N}{2^k})>1$ then start another round at step 0, doubling the comparisons etc. In pratice there will be only one round. An equivalent condition is $k<\log_2(N)$
 
@@ -74,7 +74,7 @@ Starting with a graph with $2^{13}=8192$ nodes, the sequence of diameters of the
 
 </div>
 
-Notice the diameter is not exactly divided by two, and cannot go below 7 since at step 13 we would connect nodes $i$ and $i+N/N=i+1$ which were already connected at step 0.
+Notice the diameter is not exactly divided by two, and cannot go below 7 since at step 13 we would connect nodes i and $i+N/N=i+1$ which were already connected at step 0.
 
 <!-- TODO -->
 If a competition has about ~1k competitors (let's say $2^{10}$ for convenience), and each competitor contributes 5 comparisons, then we can iterate the algorithm up to step 9 since each step after the first only needs half the competitors to complete.
@@ -84,7 +84,7 @@ If a competition has about ~1k competitors (let's say $2^{10}$ for convenience),
 
 A naive way to select the best nodes would be to pick the ones with the most wins.
 
-Following the previous example, after step 9 each node has order 10 and the probability for a given node to win 9 or 10 over 10 comparisons is, using a binomial distribution with parameters $n=10$ $p=\frac{1}{2}$:
+Following the previous example, after step 9 each node has order 10 and the probability for a given node to win 9 or 10 over 10 comparisons is, using a binomial distribution with parameters $n=10$ and $p=\frac{1}{2}$:
 
 $$
 \frac{1}{2^{10}}\left(\binom{10}{9}+\binom{10}{10}\right)=\frac{11}{2^{10}}
@@ -97,7 +97,7 @@ But it's easiser to win against a competitor who lost all his comparisons that t
 
 ## NodeRank
 
-All nodes start with 1 point, so there are $N$ points in the graph. This is a constant (the sum of all points) but points will flow in the graph: at each step the points of a given node are divided among its outgoing arrows. So a node who lost 10 out of 10 comparisons will only contribute 0.1 point to each winner. This node tends to lose often so it's not so meaningul to win against it. On the contrary a node who only lost one out of 10 comparisons will contribute one point to the winner. It means a lot more to win against this node.
+All nodes start with 1 point, so there are N points in the graph. This is a constant (the sum of all points) but points will flow in the graph: at each step the points of a given node are divided among its outgoing arrows. So a node who lost 10 out of 10 comparisons will only contribute 0.1 point to each winner. This node tends to lose often so it's not so meaningul to win against it. On the contrary a node who only lost one out of 10 comparisons will contribute one point to the winner. It means a lot more to win against this node.
 
 We apply this procedure $\mathrm{diam}(G)$ times (the diameter of the graph) to allow the information to flow between any two nodes of the graph. This way we get a more faithful representation of the value of nodes. The best ones are the ones with more points after $\mathrm{diam}(G)$ steps of this procedure.
 
@@ -107,7 +107,7 @@ It would be nice to avoid this situation by design while keeping the other prope
 
 ### Complexity
 
-- At step $k$ the judge $i$ must compare nodes $i$ and $i+\frac{N}{2^{k-1}}$, so knowing what the next judge should do is $O(1)$.
+- At step $k$ the judge i must compare nodes i and $i+\frac{N}{2^{k-1}}$, so knowing what the next judge should do is $O(1)$.
 - After $k$ steps the graph consists of $N+(k-1)\frac{N}{2}$ arrows and to compute the winners we need to flow points $\mathrm{diam}(G)$ times along these edges so the complexity is $O(Nk)$
 
 ## NodeRank+
