@@ -1,27 +1,43 @@
+from math import ceil
+
 import networkx as nx
 
-n = 13
-N = 2**n
+n = 10
+N = 1024
 
 G = nx.Graph()
 G.add_nodes_from(range(N))
 
 
 def step(k):
-    if k == 1:
+    if k == 0:
         for i in range(N):
             G.add_edge(i, (i + 1) % N)
-    elif k == 2:
+
+    elif k == 1 and n % 2 == 0:
         for i in range(int(N / 2)):
             G.add_edge(i, (i + N / 2) % N)
+
+    elif k == 1 and n % 2 == 1:
+        for i in range(ceil(N / 2)):
+            G.add_edge(i, (i + ceil(N / 2)) % N)
+
     else:
         for i in range(N):
-            G.add_edge(i, (i + N / 2 ** (k - 1)) % N)
-    print(f"step {k}, diameter", nx.diameter(G), k - 2 + N / 2**k)
+            G.add_edge(i, (i + ceil(N / 2 ** (k - 1))) % N)
+
+    print(
+        f"step {k}, diameter",
+        nx.diameter(G),
+        k - 2 + ceil(N / 2**k),
+        ceil(k * 0.5 + N / 2**k),
+    )
 
 
-for i in range(1, n + 1):
+i = 0
+while 2**i < N:
     step(i)
+    i += 1
 
 # Data with n = 13
 # step 1, diameter 4096 4096.0
