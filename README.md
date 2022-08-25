@@ -42,19 +42,30 @@ https://user-images.githubusercontent.com/48696601/186481367-c9e00009-77ee-4439-
 
 Randomly order the nodes in a list of size N and create a cycle graph from this list comparing nodes 0 and 1, nodes 1 and 2 etc. until nodes N-1 and 0.
 
+After this step, each node has order 2, there are N arrows and the graph has diameter $\mathrm{ceil}(\frac{N}{2})$. Some nodes win both of their comparisons, other win only one while other loose both.
+
+Notice we can easily model the probabilities of the number of wins for a given node with a binomial distribution with parameters $n=2$ and $p=\frac{1}{2}$. This will nicely generalize in the next steps.
+
 ### Step 1
 
 Compare nodes i and $i+\frac{N}{2}$
 
-This step is nuanced in the [details](details.md), it is the only one with two cases N even or odd. But the idea is to compare nodes far appart.
+There are two cases:
 
+- if N is odd, then this adds N arrows
+- if N is even then arrows $(i, i + \frac{N}{2})$ and $(i + \frac{N}{2}, i + N)$ compare the same nodes. At this stage, reducing the diameter comes first, so avoid the duplication of arrows. This adds $\frac{N}{2}$ arrows
+
+After this step each node has order 3 or 4 depending on the cases above and the graph has diameter $\mathrm{ceil}(\frac{N}{4})$
 
 ### Step $k$
 
 Compare nodes i and $i+\frac{N}{2^k}$ for all i.
 
-Continue while $\mathrm{ceil}(\frac{N}{2^k})>1$ then start another round at step 0, doubling the comparisons etc. In pratice there will be only one round. An equivalent condition is $k<\log_2(N)$
+After this step each node's order increases by 2 and there are N new arrows:
+- if N is even each node has order $2k+1$ and there are $N(k+\frac{1}{2})$ arrows
+- if N is odd each node has order $2(k+1)$ and there are $N(k+1)$ arrows
 
+Continue while the arrows have length > 1 then start again at step 0. The condition can be expressed as $\mathrm{ceil}(\frac{N}{2^k})>1$ or equivalently $k<\log_2(N)$. In pratice there will probably be only one round depending on how many contributions a competitor can make.
 
 ## Example
 
@@ -82,9 +93,7 @@ Starting with a graph with $2^{13}=8192$ nodes, the sequence of diameters of the
 
 Notice the diameter is not exactly divided by two, and cannot go below 7 since at step 13 we would connect nodes i and $i+N/N=i+1$ which were already connected at step 0.
 
-<!-- TODO -->
-If a competition has about ~1k competitors (let's say $2^{10}$ for convenience), and each competitor contributes 5 comparisons, then we can iterate the algorithm up to step 9 since each step after the first only needs half the competitors to complete.
-
+If a competition has about ~1k competitors (let's say $2^{10}+1$ for convenience), and each competitor contributes 7 comparisons, then we can create $7N$ arrows in total. This comparison graph will have $N(k+1)$ arrows at step $k$ so this means we can run the algorithm up to step $k=6$. At this stage the graph has diameter 18.
 
 ## Naive ranking
 
