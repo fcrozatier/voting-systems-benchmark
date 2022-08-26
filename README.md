@@ -26,12 +26,18 @@ A complete graph with N nodes has $\frac{N(N-1)}{2}$ arrows so in practice we ca
 
 So the principles above allow to relax the constaints of a complete graph, while keeping nice properties. Indeed the following algorithm creates a graph with N nodes whose diameter is roughly divided by 2 after each iteration.
 
-## Comparison graph overview
+## Comparison graph algorithms
 
-This paragraph is a general overview of the algorithm, see the [details](details.md) for more.
+We can easily design a family of algorithms with properties 1, 3 and 4 above. The idea is the following:
 
-Let say we have N nodes and assume this is a big number.
+- Step 1: connect all nodes in a cycle graph.
+- Step k: connect node i with node $F(N,k,i)$ for some function F of N, k and i.
 
+After step 1 all nodes have order 2 and there are N arrows. The diameter is $\mathrm{floor}(\frac{N}{2})$. After step k all nodes have order $2k$ and the graph has $kN$ arrows.
+
+The diameter at step k depends on the chosen function F, so we need to perform a benchmark to find the best one possible.
+
+A simple family of such functions is $F(N,k,i) = i + f(N,k)$ for f based on usual functions like $\frac{N}{k}$ or $\frac{N}{2^k}$ etc. The video below shows the construction steps when $f(N,k) = \frac{N}{2^k}$
 
 
 https://user-images.githubusercontent.com/48696601/186481367-c9e00009-77ee-4439-a22a-63dd4cd15114.mp4
@@ -45,27 +51,6 @@ Randomly order the nodes in a list of size N and create a cycle graph from this 
 After this step, each node has order 2, there are N arrows and the graph has diameter $\mathrm{ceil}(\frac{N}{2})$. Some nodes win both of their comparisons, other win only one while other loose both.
 
 Notice we can easily model the probabilities of the number of wins for a given node with a binomial distribution with parameters $n=2$ and $p=\frac{1}{2}$. This will nicely generalize in the next steps.
-
-### Step 1
-
-Compare nodes i and $i+\frac{N}{2}$
-
-There are two cases:
-
-- if N is odd, then this adds N arrows
-- if N is even then arrows $(i, i + \frac{N}{2})$ and $(i + \frac{N}{2}, i + N)$ compare the same nodes. At this stage, reducing the diameter comes first, so avoid the duplication of arrows. This adds $\frac{N}{2}$ arrows
-
-After this step each node has order 3 or 4 depending on the cases above and the graph has diameter $\mathrm{ceil}(\frac{N}{4})$
-
-### Step $k$
-
-Compare nodes i and $i+\frac{N}{2^k}$ for all i.
-
-After this step each node's order increases by 2 and there are N new arrows:
-- if N is even each node has order $2k+1$ and there are $N(k+\frac{1}{2})$ arrows
-- if N is odd each node has order $2(k+1)$ and there are $N(k+1)$ arrows
-
-Continue while the arrows have length > 1 then start again at step 0. The condition can be expressed as $\mathrm{ceil}(\frac{N}{2^k})>1$ or equivalently $k<\log_2(N)$. In pratice there will probably be only one round depending on how many contributions a competitor can make.
 
 ## Example
 
