@@ -1,8 +1,9 @@
 from math import ceil
+from random import randint
+from statistics import mean
+from types import FunctionType
 
 import networkx as nx
-
-# Todo benchmark functions 1/2**x 1/x 1/log(x)
 
 
 class ComparisonGraph:
@@ -16,7 +17,11 @@ class ComparisonGraph:
     Examples of such functions F are of the form i + f(N,k) with f based on usual functions like 1 / k, 1/ sqrt(k), 1/2**k, 1/log(k) etc.
     """
 
-    def __init__(self, size, F=lambda N, k, i: i + ceil(N / 2**k)):
+    def __init__(
+        self,
+        size: int,
+        F: FunctionType = lambda N, k, i: i + ceil(N / 2**k),
+    ):
         self.size = size
         self.F = F
         self.graph = nx.Graph()
@@ -39,9 +44,50 @@ class ComparisonGraph:
             yield nx.diameter(self.graph)
 
 
-graph = ComparisonGraph(2**11)
-for d in graph.diameters():
-    print(d)
+class Benchmark:
+    def __init__(
+        self,
+        F1: FunctionType = lambda N, k, i: i + ceil(N / 2**k),
+        F2: FunctionType = lambda N, k, i: i + ceil(N / 2**k),
+        sample=1000,
+    ):
+        self.F1 = F1
+        self.F2 = F2
+        self.sample = sample
+
+    """
+    Test whether F1 is a strongly superior method to F2
+    """
+
+    def strong(self, Nmin, Nmax):
+        exceptions = set()
+        delta = []
+        for i in range(self.sample):
+            n = randint(Nmin, Nmax)
+            g1 = ComparisonGraph(n, self.F1)
+            g2 = ComparisonGraph(n, self.F2)
+
+            print("----------------------------------")
+            print(f"Iteration {i}/{self.sample}: n={n}")
+
+            for d1, d2 in zip(g1.diameters(), g2.diameters()):
+                print(f"\t{d1}, {d2}, {d1 <= d2}")
+                if d1 > d2:
+                    exceptions.add(n)
+                    delta.append(d1 - d2)
+
+        print("\n")
+        print("Benchmark results")
+        print("-----------------")
+        print(
+            f"F1 strongly better than F2 at {(1 - len(exceptions)/(Nmax-Nmin+1))*100}%"
+        )
+        print(f"Average diameter difference when not better: {mean(delta)}")
+
+
+# graph = ComparisonGraph(2**11)
+# for d in graph.diameters():
+#     print(d)
 
 # Data with n = 13
 # step 1, diameter 4096 4096.0
