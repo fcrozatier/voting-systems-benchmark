@@ -49,7 +49,7 @@ class Benchmark:
         self,
         F1: FunctionType = lambda N, k, i: i + ceil(N / 2**k),
         F2: FunctionType = lambda N, k, i: i + ceil(N / 2**k),
-        sample=1000,
+        sample=100,
     ):
         self.F1 = F1
         self.F2 = F2
@@ -79,15 +79,13 @@ class Benchmark:
         print("\n")
         print("Benchmark results")
         print("-----------------")
+        print(f"Sample size: {self.sample}")
         print(
             f"F1 strongly better than F2 at {(1 - len(exceptions)/(Nmax-Nmin+1))*100}%"
         )
-        print(f"Average diameter difference when not better: {mean(delta)}")
+        if len(delta) > 0:
+            print(f"Average diameter difference when not better: {mean(delta)}")
 
-
-# graph = ComparisonGraph(2**11)
-# for d in graph.diameters():
-#     print(d)
 
 # Data with n = 13
 # step 1, diameter 4096 4096.0
