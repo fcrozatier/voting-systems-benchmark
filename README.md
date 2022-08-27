@@ -28,7 +28,7 @@ So the principles above allow to relax the constaints of a complete graph, while
 
 ## Comparison graph algorithms
 
-We can easily design a family of algorithms with properties 1, 3 and 4 above. The idea is the following:
+We can easily design a family of algorithms building graphs with properties 1, 3 and 4 above. The idea is the following:
 
 - Step 1: connect all nodes in a cycle graph.
 - Step k: connect node i with node $F(N,k,i)$ for some function F of N, k and i.
