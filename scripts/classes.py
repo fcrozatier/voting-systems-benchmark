@@ -70,7 +70,11 @@ class Benchmark:
             print("----------------------------------")
             print(f"Iteration {i}/{self.sample}: n={n}")
 
-            for d1, d2 in zip(g1.diameters(), g2.diameters()):
+            for step, (d1, d2) in enumerate(zip(g1.diameters(), g2.diameters())):
+                # Prevent too many iterations: the diameter changes the most in the first iterations
+                if step >= 10:
+                    break
+
                 print(f"\t{d1}, {d2}, {d1 <= d2}")
                 if d1 > d2:
                     exceptions.add(n)
