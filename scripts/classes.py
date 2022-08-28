@@ -28,19 +28,15 @@ class ComparisonGraph:
         self.graph.add_nodes_from(range(size))
 
     def diameters(self):
-        step = 0
-        edges = [(i, (i + 1) % self.size) for i in range(self.size)]
-        step += 1
-        self.graph.add_edges_from(edges)
+        step = 1
+        self.graph.add_edges_from((i, (i + 1) % self.size) for i in range(self.size))
         yield nx.diameter(self.graph)
 
         while abs(self.F(self.size, step, 0)) > 1:
-            edges = [
-                (i, self.F(self.size, step, i) % self.size) for i in range(self.size)
-            ]
-
             step += 1
-            self.graph.add_edges_from(edges)
+            self.graph.add_edges_from(
+                (i, self.F(self.size, step, i) % self.size) for i in range(self.size)
+            )
             yield nx.diameter(self.graph)
 
 
@@ -85,7 +81,7 @@ class Benchmark:
         print("-----------------")
         print(f"Sample size: {self.sample}")
         print(
-            f"F1 strongly better than F2 at {(1 - len(exceptions)/(Nmax-Nmin+1))*100}%"
+            f"F1 strongly better than F2 at {(1 - len(exceptions)/(self.sample))*100}%"
         )
         if len(delta) > 0:
             print(f"Average diameter difference when not better: {mean(delta)}")
