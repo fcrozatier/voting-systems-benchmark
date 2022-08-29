@@ -1,3 +1,5 @@
+from functools import reduce
+from itertools import pairwise
 from math import ceil
 from random import randint
 from statistics import mean
@@ -43,12 +45,10 @@ class ComparisonGraph:
 class Benchmark:
     def __init__(
         self,
-        F1: FunctionType = lambda N, k, i: i + ceil(N / 2**k),
-        F2: FunctionType = lambda N, k, i: i + ceil(N / 2**k),
+        *strategies,
         sample=100,
     ):
-        self.F1 = F1
-        self.F2 = F2
+        self.strategies = strategies
         self.sample = sample
 
     """
@@ -60,29 +60,32 @@ class Benchmark:
         delta = []
         for i in range(self.sample):
             n = randint(Nmin, Nmax)
-            g1 = ComparisonGraph(n, self.F1)
-            g2 = ComparisonGraph(n, self.F2)
+            graphs = (ComparisonGraph(n, F) for F in self.strategies)
 
             print("----------------------------------")
-            print(f"Iteration {i}/{self.sample}: n={n}")
+            print(f"Iteration {i+1}/{self.sample}: n={n}")
 
-            for step, (d1, d2) in enumerate(zip(g1.diameters(), g2.diameters())):
+            for step, diameters in enumerate(zip(*(g.diameters() for g in graphs))):
                 # Prevent too many iterations: the diameter changes the most in the first iterations
                 if step >= 10:
                     break
 
-                print(f"\t{d1}, {d2}, {d1 <= d2}")
-                if d1 > d2:
+                better = reduce(
+                    lambda a, b: a and b, (a <= b for a, b in pairwise(diameters))
+                )
+
+                print(f"\t{diameters}, {better}")
+                if not better:
                     exceptions.add(n)
-                    delta.append(d1 - d2)
+                    for (a, b) in pairwise(diameters):
+                        if a > b:
+                            delta.append(a - b)
 
         print("\n")
         print("Benchmark results")
         print("-----------------")
         print(f"Sample size: {self.sample}")
-        print(
-            f"F1 strongly better than F2 at {(1 - len(exceptions)/(self.sample))*100}%"
-        )
+        print(f"Strongly better: {round(1 - len(exceptions)/(self.sample), 4)*100}%")
         if len(delta) > 0:
             print(f"Average diameter difference when not better: {mean(delta)}")
 
