@@ -43,6 +43,10 @@ class ComparisonGraph:
 
 
 class Benchmark:
+    """
+    stategies: the different strategies F1, F2, F3 etc to compare
+    """
+
     def __init__(
         self,
         *strategies,
@@ -51,11 +55,10 @@ class Benchmark:
         self.strategies = strategies
         self.sample = sample
 
-    """
-    Test whether F1 is a strongly superior method to F2
-    """
-
     def strong(self, Nmin, Nmax):
+        """
+        Test whether F1 is strongly superior to F2 and F2 strongly superior to F3 etc.
+        """
         exceptions = set()
         delta = []
         for i in range(self.sample):
