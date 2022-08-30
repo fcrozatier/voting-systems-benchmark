@@ -24,18 +24,18 @@ The best graph satisfying these properties is the **complete graph** which has d
 
 A complete graph with N nodes has $\frac{N(N-1)}{2}$ arrows so in practice we cannot expected to construct this graph, since each of the N competitors would need to rank about $\frac{N-1}{2}$ entries which in pratice is way too much.
 
-So the principles above allow to relax the constaints of a complete graph, while keeping nice properties. Indeed the following algorithm creates a graph with N nodes whose diameter is roughly divided by 2 after each iteration.
+So the principles above allow to relax the constaints of a complete graph, while keeping nice properties. Indeed the following algorithm creates a graph with N nodes whose diameter is exponentially decreasing after each iteration.
 
-## Comparison graph algorithms
+## Comparison graph
 
 We can easily design a family of algorithms building graphs with properties 1, 3 and 4 above. The idea is the following:
 
 - Step 1: connect all nodes in a cycle graph.
 - Step k: connect node i with node $F(N,k,i)$ for some function F of N, k and i.
 
-After step 1 all nodes have order 2 and there are N arrows. The diameter is $\mathrm{floor}(\frac{N}{2})$. After step k all nodes have order $2k$ and the graph has $kN$ arrows.
+After step 1 all nodes have order 2 and there are N arrows. The diameter is $\mathrm{floor}(\frac{N}{2})$.
 
-The diameter at step k depends on the chosen function F, so we need to perform a benchmark to find the best one possible.
+If $F$ is injective after step k all nodes have order $2k$ and the graph has $kN$ arrows. The diameter at step k depends on the chosen function F, so we need to perform a benchmark to find the best function possible.
 
 A simple family of such functions is $F(N,k,i) = i + f(N,k)$ for f based on usual functions like $\frac{N}{k}$ or $\frac{N}{2^k}$ etc. The video below shows the construction steps when $f(N,k) = \frac{N}{2^k}$
 
@@ -44,11 +44,25 @@ https://user-images.githubusercontent.com/48696601/186481367-c9e00009-77ee-4439-
 
 
 
-### Step 0
+## Benchmark
 
-Randomly order the nodes in a list of size N and create a cycle graph from this list comparing nodes 0 and 1, nodes 1 and 2 etc. until nodes N-1 and 0.
+When comparing two strategies F1 and F2 for building the comparison graph, we say that F1 is _strongly_ better that F2 if at **every** step of the algorithm, the graph yielded by F1 has a diameter less than or equal to the diameter of the graph given by F2
 
-After this step, each node has order 2, there are N arrows and the graph has diameter $\mathrm{ceil}(\frac{N}{2})$. Some nodes win both of their comparisons, other win only one while other loose both.
+This is a strong constraint and takes time to compute so we can only test it on a random sample of graphs. For each benchmark I've sampled 20 graphs randomly chosen with order between 100 and 10000. I've only looked at the first 10 iterations since they are the most meaningful for the applications.
+
+The different stategies I've benchmarked are:
+- Power of two: $F(N,k,i)=i+ceil(\frac{N}{2^k})$
+- Inverse: $F(N,k,i)=i+ceil(\frac{N}{1+k})$
+- Square root: $F(N,k,i)=i+ceil(\frac{N}{1+\sqrt{k}})$
+- Logarithm: $F(N,k,i)=i+ceil(\frac{N}{2+\log{k}})$
+
+You can check the benchmark results `python -m scripts.benchmark`
+
+### Results
+
+- The inverse strategy is strongly better that the power of two strategy in 100% of samples
+- The square root strategy is strongly better that the inverse strategy in 90% samples. In the cases when it was not, there was only one iteration with diameter delta of 1.
+-
 
 Notice we can easily model the probabilities of the number of wins for a given node with a binomial distribution with parameters $n=2$ and $p=\frac{1}{2}$. This will nicely generalize in the next steps.
 
