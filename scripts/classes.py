@@ -1,3 +1,4 @@
+import operator
 from functools import reduce
 from itertools import pairwise
 from math import ceil
@@ -61,6 +62,7 @@ class Benchmark:
         """
         exceptions = set()
         delta = []
+        weak = [0] * len(self.strategies)
         for i in range(self.sample):
             n = randint(Nmin, Nmax)
             graphs = (ComparisonGraph(n, F) for F in self.strategies)
@@ -77,6 +79,10 @@ class Benchmark:
                     lambda a, b: a and b, (a <= b for a, b in pairwise(diameters))
                 )
 
+                # stategy that weakly wins
+                if len(list(filter(lambda x: x == min(diameters), diameters))) == 1:
+                    weak[diameters.index(min(diameters))] += 1
+
                 print(f"\t{diameters}, {better}")
                 if not better:
                     exceptions.add(n)
@@ -91,6 +97,12 @@ class Benchmark:
         print(f"Strongly better: {round(1 - len(exceptions)/(self.sample), 4)*100}%")
         if len(delta) > 0:
             print(f"Average diameter difference when not better: {mean(delta)}")
+
+        print("\n")
+        for i, p in enumerate(weak):
+            print(
+                f"- Strategy F{i+1} is weakly better {round(p/reduce(operator.add, weak) * 100, 2)}% of the time"
+            )
 
 
 # Data with n = 13
