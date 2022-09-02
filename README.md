@@ -35,7 +35,7 @@ We can easily design a family of algorithms building graphs with properties 1, 3
 
 After step 1 all nodes have order 2 and there are N arrows. The diameter is $\mathrm{floor}(\frac{N}{2})$.
 
-If $F$ is injective after step k all nodes have order $2k$ and the graph has $kN$ arrows. The diameter at step k depends on the chosen function F, so we need to perform a benchmark to find the best function possible.
+After step k all nodes have order $2k$ (F must be injective) and the graph has $kN$ arrows. The diameter at step k depends on the chosen function F, so we need to perform a benchmark to find the best function possible.
 
 A simple family of such functions is $F(N,k,i) = i + f(N,k)$ for f based on usual functions like $\frac{N}{k}$ or $\frac{N}{2^k}$ etc. The video below shows the construction steps when $f(N,k) = \frac{N}{2^k}$
 
@@ -46,23 +46,25 @@ https://user-images.githubusercontent.com/48696601/186481367-c9e00009-77ee-4439-
 
 ## Benchmark
 
-When comparing two strategies F1 and F2 for building the comparison graph, we say that F1 is _strongly_ better that F2 if at **every** step of the algorithm, the graph yielded by F1 has a diameter less than or equal to the diameter of the graph given by F2
+When comparing two strategies F1 and F2 for building the comparison graph, we say that F1 is _strongly_ better that F2 if at **every** step of the algorithm, the graph yielded by F1 has a diameter less than or equal to the one yielded by F2. We say it's _weakly_ better if on average more steps are in favor of F1 than F2.
 
-This is a strong constraint and takes time to compute so we can only test it on a random sample of graphs. For each benchmark I've sampled 20 graphs randomly chosen with order between 100 and 10000. I've only looked at the first 10 iterations since they are the most meaningful for the applications.
+This takes time to compute so we can only test it on a random sample of graphs. For each benchmark I've sampled 20 graphs randomly chosen with order between 100 and 10000. I've only looked at the first 10 iterations since they are the most meaningful for the applications.
 
-The different stategies I've benchmarked are:
-- Power of two: $F(N,k,i)=i+ceil(\frac{N}{2^k})$
-- Inverse: $F(N,k,i)=i+ceil(\frac{N}{1+k})$
-- Square root: $F(N,k,i)=i+ceil(\frac{N}{1+\sqrt{k}})$
-- Logarithm: $F(N,k,i)=i+ceil(\frac{N}{2+\log{k}})$
+The different stategies benchmarked are:
+- Power of two: $F(N,k,i)=i+\mathrm{ceil}(\frac{N}{2^k})$
+- Inverse: $F(N,k,i)=i+\mathrm{ceil}(\frac{N}{1+k})$
+- Square root: $F(N,k,i)=i+\mathrm{ceil}(\frac{N}{1+\sqrt{k}})$
+- Logarithm: $F(N,k,i)=i+\mathrm{ceil}(\frac{N}{2+\log{k}})$
 
-You can check the benchmark results `python -m scripts.benchmark`
+You can check the benchmark results with the command `python -m scripts.benchmark`
 
 ### Results
 
+When N is big enough there is a clear difference between the different strategies:
+
 - The inverse strategy is strongly better that the power of two strategy in 100% of samples
-- The square root strategy is strongly better that the inverse strategy in 90% samples. In the cases when it was not, there was only one iteration with diameter delta of 1.
--
+- The square root strategy is strongly better that the inverse strategy in 90% samples. In the cases when it was not, there was only one iteration with diameter difference of 1.
+- The log strategy is not strongly better than the square root strategy (only 10% of the time) but it is weakly better 60% of the time.
 
 Notice we can easily model the probabilities of the number of wins for a given node with a binomial distribution with parameters $n=2$ and $p=\frac{1}{2}$. This will nicely generalize in the next steps.
 
