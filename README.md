@@ -35,9 +35,9 @@ We can easily design a family of algorithms building graphs with properties 1, 3
 
 After step 1 all nodes have order 2 and there are N arrows. The diameter is $\mathrm{floor}(\frac{N}{2})$.
 
-After step k all nodes have order $2k$ (F must be injective) and the graph has $kN$ arrows. The diameter at step k depends on the chosen function F, so we need to perform a benchmark to find the best function possible.
+After step k all nodes have order $2k$ ($F$ must be injective) and the graph has $kN$ arrows. The diameter at step k depends on the chosen function F, so we need to perform a benchmark to find the best function possible.
 
-A simple family of such functions is $F(N,k,i) = i + f(N,k)$ for f based on usual functions like $\frac{N}{k}$ or $\frac{N}{2^k}$ etc. The video below shows the construction steps when $f(N,k) = \frac{N}{2^k}$
+A simple family of such functions is $F(N,k,i) = i + f(N,k)$ for f based on usual functions like $\frac{N}{k}$ or $\frac{N}{2^k}$ etc. The video below shows the construction steps when $f(N,k) = \mathrm{ceil}(\frac{N}{2^k})$
 
 
 https://user-images.githubusercontent.com/48696601/186481367-c9e00009-77ee-4439-a22a-63dd4cd15114.mp4
@@ -46,55 +46,39 @@ https://user-images.githubusercontent.com/48696601/186481367-c9e00009-77ee-4439-
 
 ## Benchmark
 
-When comparing two strategies F1 and F2 for building the comparison graph, we say that F1 is _strongly_ better that F2 if at **every** step of the algorithm, the graph yielded by F1 has a diameter less than or equal to the one yielded by F2. We say it's _weakly_ better if on average more steps are in favor of F1 than F2.
+When comparing two strategies F1 and F2 for building the comparison graph, let's say F1 is **strongly** better that F2 if at **every** step of the algorithm, the diameter given by strategy F1 is less than or equal to the one given by strategy F2. Let's say it's **weakly** better if on average more steps are in favor of F1 rather than F2.
 
-This takes time to compute so we can only test it on a random sample of graphs. For each benchmark I've sampled 20 graphs randomly chosen with order between 100 and 10000. I've only looked at the first 10 iterations since they are the most meaningful for the applications.
+For the benchmark I've looked at the first 10 iterations of the algorithm, on random samples of graphs of order between 100 and 10000.
 
 The different stategies benchmarked are:
-- Power of two: $F(N,k,i)=i+\mathrm{ceil}(\frac{N}{2^k})$
-- Inverse: $F(N,k,i)=i+\mathrm{ceil}(\frac{N}{1+k})$
-- Square root: $F(N,k,i)=i+\mathrm{ceil}(\frac{N}{1+\sqrt{k}})$
-- Logarithm: $F(N,k,i)=i+\mathrm{ceil}(\frac{N}{2+\log{k}})$
+- Powers of two: based on $f(N,k)=\frac{N}{2^k}$
+- Inverse: based on $f(N,k)=\frac{N}{1+k}$
+- Square root: based on $f(N,k)=\frac{N}{1+\sqrt{k}}$
+- Logarithm: based on $f(N,k)=\frac{N}{2+\log{k}}$
 
-You can check the benchmark results with the command `python -m scripts.benchmark`
+You can run the benchmarks with `python -m scripts.benchmark`
 
 ### Results
 
-When N is big enough there is a clear difference between the different strategies:
+When N is big enough there is a clear difference between the strategies:
 
-- The inverse strategy is strongly better that the power of two strategy in 100% of samples
-- The square root strategy is strongly better that the inverse strategy in 90% samples. In the cases when it was not, there was only one iteration with diameter difference of 1.
-- The log strategy is not strongly better than the square root strategy (only 10% of the time) but it is weakly better 60% of the time.
-
-Notice we can easily model the probabilities of the number of wins for a given node with a binomial distribution with parameters $n=2$ and $p=\frac{1}{2}$. This will nicely generalize in the next steps.
+- The inverse strategy is strongly better than the power of two strategy in 100% of samples
+- The square root strategy is strongly weakly better than the inverse strategy in 82% of
+- The log strategy is weakly better than the square root strategy 76% of the time
 
 ## Example
 
-Starting with a graph with $2^{13}=8192$ nodes, the sequence of diameters of the comparison graph is:
+This is the decrease of diameters for the different strategies when $n=4433$
 
-<div style="display: flex; justify-content: center;">
 
-|  step   | diameter |
-| :-----: | :------: |
-| step 0  |   4096   |
-| step 1  |   2048   |
-| step 2  |   1025   |
-| step 3  |   513    |
-| step 4  |   258    |
-| step 5  |   130    |
-| step 6  |    67    |
-| step 7  |    35    |
-| step 8  |    20    |
-| step 9  |    12    |
-| step 10 |    9     |
-| step 11 |    7     |
-| step 12 |    7     |
 
-</div>
+<img src="assets/example.png" alt="benchmark" width="600" style="display: block; margin-inline: auto;">
 
-Notice the diameter is not exactly divided by two, and cannot go below 7 since at step 13 we would connect nodes i and $i+N/N=i+1$ which were already connected at step 0.
 
-If a competition has about ~1k competitors (let's say $2^{10}+1$ for convenience), and each competitor contributes 7 comparisons, then we can create $7N$ arrows in total. This comparison graph will have $N(k+1)$ arrows at step $k$ so this means we can run the algorithm up to step $k=6$. At this stage the graph has diameter 18.
+
+After 8 steps with the log strategy the graph has order 6.
+
+Notice we can easily model the probabilities of the number of wins for a given node with a binomial distribution with parameters $n=2$ and $p=\frac{1}{2}$. This will nicely generalize in the next steps.
 
 ## Naive ranking
 
