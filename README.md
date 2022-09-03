@@ -56,14 +56,14 @@ The different stategies benchmarked are:
 - Square root: based on $f(N,k)=\frac{N}{1+\sqrt{k}}$
 - Logarithm: based on $f(N,k)=\frac{N}{2+\log{k}}$
 
-You can run the benchmarks with `python -m scripts.benchmark`
+You can run the benchmarks with `python -m scripts.benchmark`. See `benchmark.py` for the exact strategies implementation
 
 ### Results
 
 When N is big enough there is a clear difference between the strategies:
 
 - The inverse strategy is strongly better than the power of two strategy in 100% of samples
-- The square root strategy is strongly weakly better than the inverse strategy in 82% of
+- The square root strategy is weakly better than the inverse strategy 82% of the time
 - The log strategy is weakly better than the square root strategy 76% of the time
 
 ## Example
@@ -71,8 +71,9 @@ When N is big enough there is a clear difference between the strategies:
 This is the decrease of diameters for the different strategies when $n=4433$
 
 
-
-<img src="assets/example.png" alt="benchmark" width="600" style="display: block; margin-inline: auto;">
+<p align="center">
+  <img src="assets/example.png" alt="benchmark" width="600">
+</p>
 
 
 
