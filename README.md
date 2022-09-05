@@ -119,3 +119,7 @@ Coming soon!
 ## Contributing
 
 If you would like to make a suggestion, correct a typo or improve the algorithm/explanation/graphics, you can send a pull request, they are welcome !
+
+## License
+
+[MIT](LICENSE)
