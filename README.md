@@ -85,6 +85,12 @@ Notice we can easily model the probabilities of the number of wins for a given n
 
 A naive way to select the best nodes would be to pick the ones with the most wins.
 
+
+
+https://user-images.githubusercontent.com/48696601/194147175-5bc29dff-7b33-4b0a-b0b1-2f4cafe1f22f.mp4
+
+
+
 Following the previous example, after step 9 each node has order 10 and the probability for a given node to win 9 or 10 over 10 comparisons is, using a binomial distribution with parameters $n=10$ and $p=\frac{1}{2}$:
 
 $$
@@ -93,7 +99,7 @@ $$
 
 So in a competition with $2^{10}$ competitors this would select about 11 entries.
 
-But it's easiser to win against a competitor who lost all his comparisons that to win against a competitor who wins most his comparisons. So it's not enough to count to number of wins. We must take into account the relative strength of the loosing nodes.
+But it's easiser to win against a competitor who lost all his comparisons than it is to win against a competitor who wins most his comparisons. So it's not enough to count to number of wins. We must take into account the relative strength of the loosing nodes.
 
 
 ## NodeRank
