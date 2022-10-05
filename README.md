@@ -68,7 +68,7 @@ When N is big enough there is a clear difference between the strategies:
 
 ## Example
 
-This is the decrease of diameters for the different strategies when $n=4433$
+This is the decrease in diameter for the different strategies when $n=4433$
 
 
 <p align="center">
