@@ -35,7 +35,7 @@ We can easily design a family of algorithms building graphs with properties 1, 3
 
 After step 1 all nodes have order 2 and there are N arrows. The diameter is $\mathrm{floor}(\frac{N}{2})$.
 
-After step k all nodes have order $2k$ ($F$ must be injective) and the graph has $kN$ arrows. The diameter at step k depends on the chosen function F, so we need to perform a benchmark to find the best function possible.
+After step k all nodes have order $2k$ (F must be injective) and the graph has $kN$ arrows. The diameter at step k depends on the chosen function F, so we need to perform a benchmark to find the best function possible.
 
 A simple family of such functions is $F(N,k,i) = i + f(N,k)$ for f based on usual functions like $\frac{N}{k}$ or $\frac{N}{2^k}$ etc. The video below shows the construction steps when $f(N,k) = \mathrm{ceil}(\frac{N}{2^k})$
 
@@ -77,7 +77,7 @@ This is the decrease in diameter for the different strategies when $n=4433$
 
 
 
-After 8 steps with the log strategy the graph has order 6.
+After 8 steps with the log strategy the graph has diameter 6.
 
 Notice we can easily model the probabilities of the number of wins for a given node with a binomial distribution with parameters $n=2$ and $p=\frac{1}{2}$. This will nicely generalize in the next steps.
 
