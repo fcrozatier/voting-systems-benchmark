@@ -86,8 +86,7 @@ Notice we can easily model the probabilities of the number of wins for a given n
 A naive way to select the best nodes would be to pick the ones with the most wins.
 
 
-
-https://user-images.githubusercontent.com/48696601/194147175-5bc29dff-7b33-4b0a-b0b1-2f4cafe1f22f.mp4
+https://user-images.githubusercontent.com/48696601/194752506-684f09a1-525d-4d52-aeeb-14a646df92fa.mp4
 
 
 
@@ -107,6 +106,12 @@ But it's easiser to win against a competitor who lost all his comparisons than i
 All nodes start with 1 point, so there are N points in the graph. This is a constant (the sum of all points) but points will flow in the graph: at each step the points of a given node are divided among its outgoing arrows. So a node who lost 10 out of 10 comparisons will only contribute 0.1 point to each winner. This node tends to lose often so it's not so meaningul to win against it. On the contrary a node who only lost one out of 10 comparisons will contribute one point to the winner. It means a lot more to win against this node.
 
 We apply this procedure $\mathrm{diam}(G)$ times (the diameter of the graph) to allow the information to flow between any two nodes of the graph. This way we get a more faithful representation of the value of nodes. The best ones are the ones with more points after $\mathrm{diam}(G)$ steps of this procedure.
+
+
+
+https://user-images.githubusercontent.com/48696601/194752648-78059b6a-d744-482b-a22d-29b6b7b7b6ef.mp4
+
+
 
 The name is inpired from the PageRank algorithm. But there is more in the next section. As-is this algorithm promotes nodes with many wins against nodes with many wins themselves. But couldn't it be that a node only happened to be compared to weaker entries, while still being a very good entry ? This kind of node would be stuck with only a few points while still being a very good entry.
 
