@@ -3,12 +3,13 @@ from math import ceil, log, sqrt
 from scripts.classes import Benchmark
 
 
-def inverse(N,k,i):
+def inverse(N, k, i):
     if k <= 2:
         return i + ceil(N / 2**k)
     return i + ceil(N / (k + 2))
 
-def inverseLog(N,k,i):
+
+def inverseLog(N, k, i):
     if k <= 2:
         return i + ceil(N / (1 + sqrt(k)))
     return i + ceil(N / (2 + log(k)))
@@ -65,21 +66,9 @@ def inverseLog(N,k,i):
 
 
 Benchmark(
-    lambda N, k, i: inverseLog(N,k,i),
+    lambda N, k, i: inverseLog(N, k, i),
     lambda N, k, i: i + ceil(N / (1 + sqrt(k))),
-    lambda N, k, i: inverse(N,k,i),
+    lambda N, k, i: inverse(N, k, i),
     lambda N, k, i: i + ceil(N / 2**k),
     sample=1,
 ).strong(1000, 5000)
-
-# Iteration 1/1: n=4433
-# 	(2216, 2216, 2216, 2216), True
-# 	(53, 53, 554, 554), True
-# 	(19, 47, 113, 277), True
-# 	(12, 17, 40, 139), True
-# 	(9, 17, 10, 70), False
-# 	(8, 8, 8, 35), True
-# 	(7, 7, 7, 18), True
-# 	(6, 6, 6, 10), True
-# 	(6, 6, 6, 7), True
-# 	(5, 5, 6, 6), True

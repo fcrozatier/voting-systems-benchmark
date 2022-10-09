@@ -103,19 +103,3 @@ class Benchmark:
             print(
                 f"- Strategy F{i+1} is weakly better {round(p/reduce(operator.add, weak) * 100, 2)}% of the time"
             )
-
-
-# Data with n = 13
-# step 1, diameter 4096 4096.0
-# step 2, diameter 2048 2048.0
-# step 3, diameter 1025 1025.0
-# step 4, diameter 513 514.0
-# step 5, diameter 258 259.0
-# step 6, diameter 130 132.0
-# step 7, diameter 67 69.0
-# step 8, diameter 35 38.0
-# step 9, diameter 20 23.0
-# step 10, diameter 12 16.0
-# step 11, diameter 9 13.0
-# step 12, diameter 7 12.0
-# step 13, diameter 7 12.0

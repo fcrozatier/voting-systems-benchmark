@@ -119,7 +119,7 @@ It would be nice to avoid this situation by design while keeping the other prope
 
 ### Complexity
 
-- At step $k$ the judge i must compare nodes i and $i+\frac{N}{2^{k-1}}$, so knowing what the next judge should do is $O(1)$.
+- At step $k$ the judge i must compare nodes i and $i+f(N,k)$, so knowing what the next judge should do is $O(1)$.
 - After $k$ steps the graph consists of $N+(k-1)\frac{N}{2}$ arrows and to compute the winners we need to flow points $\mathrm{diam}(G)$ times along these edges so the complexity is $O(Nk)$
 
 ## NodeRank+
