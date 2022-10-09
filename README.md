@@ -109,7 +109,7 @@ We apply this procedure $\mathrm{diam}(G)$ times (the diameter of the graph) to 
 
 
 
-https://user-images.githubusercontent.com/48696601/194752648-78059b6a-d744-482b-a22d-29b6b7b7b6ef.mp4
+https://user-images.githubusercontent.com/48696601/194753795-f6d8412d-0606-4194-9da3-c4530739ee48.mp4
 
 
 
