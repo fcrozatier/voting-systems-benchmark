@@ -1,12 +1,14 @@
-# NodeRank+
+# NodeRank
 
-Here I propose an algorithm for massive competion judging. See the [contributing](#contributing) section.
+Algorithm for massive competion judging. See the [contributing](#contributing) section.
 
-In a big competition context, a few judges cannot rank all the entries, so we need a **peer review** algorithm.
+## Description
 
-Also, assigning an absolute number to an entry is quite hard, and we often need to reevaluate the number after judging a few entries. It is far easier to estimate whether an entry is better than another entry. So the ranking will be based on **pairwise comparisons**, following other algorithms like [Gavel](https://www.anishathalye.com/2015/03/07/designing-a-better-judging-system/)
+In a big competition context, a few judges cannot rank all the entries, we need a **peer review** algorithm.
 
-In this way entries correspond quite naturally to the nodes of a directed graph where a comparison between two nodes is an arrow pointing to the better entry. The algorithm needs to describe how to construct this **comparison graph** and how to rank entries from this graph.
+Also, assigning an absolute number to an entry is quite hard, and we often need to reevaluate the number after judging a few entries. It is far easier to estimate whether an entry is better than another entry. This is why the ranking will be based on **pairwise comparisons**, following other algorithms like [Gavel](https://www.anishathalye.com/2015/03/07/designing-a-better-judging-system/)
+
+This way entries correspond quite naturally to the nodes of a directed graph where a comparison between two nodes is an arrow pointing to the better entry. The following algorithm describes how to construct this **comparison graph** and how to rank entries from this graph.
 
 ## Principles
 
@@ -37,7 +39,7 @@ After step 1 all nodes have order 2 and there are N arrows. The diameter is $\ma
 
 After step k all nodes have order $2k$ (F must be injective) and the graph has $kN$ arrows. The diameter at step k depends on the chosen function F, so we need to perform a benchmark to find the best function possible.
 
-A simple family of such functions is $F(N,k,i) = i + f(N,k)$ for f based on usual functions like $\frac{N}{k}$ or $\frac{N}{2^k}$ etc. The video below shows the construction steps when $f(N,k) = \mathrm{ceil}(\frac{N}{2^k})$
+A simple family of such functions are $F(N,k,i) = i + f(N,k)$ for f based on usual functions like $\frac{N}{k}$ or $\frac{N}{2^k}$ etc. The video below shows the steps when $f(N,k) = \mathrm{ceil}(\frac{N}{2^k})$
 
 
 https://user-images.githubusercontent.com/48696601/186481367-c9e00009-77ee-4439-a22a-63dd4cd15114.mp4
@@ -46,9 +48,9 @@ https://user-images.githubusercontent.com/48696601/186481367-c9e00009-77ee-4439-
 
 ## Benchmark
 
-When comparing two strategies F1 and F2 for building the comparison graph, let's say F1 is **strongly** better that F2 if at **every** step of the algorithm, the diameter given by strategy F1 is less than or equal to the one given by strategy F2. Let's say it's **weakly** better if on average more steps are in favor of F1 rather than F2.
+When comparing two strategies F1 and F2 for building the comparison graph, let's say F1 is **strongly** better that F2 if at **every** step of the algorithm, the diameter given by strategy F1 is less than or equal to the one given by strategy F2. Let's say it's **weakly** better if on average more steps are in favor of F1 than F2.
 
-For the benchmark I've looked at the first 10 iterations of the algorithm, on random samples of graphs of order between 100 and 10000.
+For the benchmark we've looked at the first 10 iterations of the algorithm, on random samples of graphs of order between 100 and 10000.
 
 The different stategies benchmarked are:
 - Powers of two: based on $f(N,k)=\frac{N}{2^k}$
@@ -56,7 +58,7 @@ The different stategies benchmarked are:
 - Square root: based on $f(N,k)=\frac{N}{1+\sqrt{k}}$
 - Logarithm: based on $f(N,k)=\frac{N}{2+\log{k}}$
 
-You can run the benchmarks with `python -m scripts.benchmark`. See `benchmark.py` for the exact strategies implementation
+You can run the benchmarks with `python -m scripts.benchmark`. See `benchmark.py` for the exact implementations.
 
 ### Results
 
@@ -79,8 +81,6 @@ This is the decrease in diameter for the different strategies when $n=4433$
 
 After 8 steps with the log strategy the graph has diameter 6.
 
-Notice we can easily model the probabilities of the number of wins for a given node with a binomial distribution with parameters $n=2$ and $p=\frac{1}{2}$. This will nicely generalize in the next steps.
-
 ## Naive ranking
 
 A naive way to select the best nodes would be to pick the ones with the most wins.
@@ -89,8 +89,7 @@ A naive way to select the best nodes would be to pick the ones with the most win
 https://user-images.githubusercontent.com/48696601/194752506-684f09a1-525d-4d52-aeeb-14a646df92fa.mp4
 
 
-
-Following the previous example, after step 9 each node has order 10 and the probability for a given node to win 9 or 10 over 10 comparisons is, using a binomial distribution with parameters $n=10$ and $p=\frac{1}{2}$:
+Following the previous example, after step 8 each node has order 16. We can easily model the probabilities of the number of wins for a given node with a binomial distribution with parameters $n=16$ and $p=\frac{1}{2}$. The probability for a given node to win 9 or 10 over 10 comparisons is, using a binomial distribution with parameters $n=10$ and $p=\frac{1}{2}$:
 
 $$
 \frac{1}{2^{10}}\left(\binom{10}{9}+\binom{10}{10}\right)=\frac{11}{2^{10}}
@@ -108,28 +107,18 @@ All nodes start with 1 point, so there are N points in the graph. This is a cons
 We apply this procedure $\mathrm{diam}(G)$ times (the diameter of the graph) to allow the information to flow between any two nodes of the graph. This way we get a more faithful representation of the value of nodes. The best ones are the ones with more points after $\mathrm{diam}(G)$ steps of this procedure.
 
 
-
 https://user-images.githubusercontent.com/48696601/194753795-f6d8412d-0606-4194-9da3-c4530739ee48.mp4
 
-
-
-The name is inpired from the PageRank algorithm. But there is more in the next section. As-is this algorithm promotes nodes with many wins against nodes with many wins themselves. But couldn't it be that a node only happened to be compared to weaker entries, while still being a very good entry ? This kind of node would be stuck with only a few points while still being a very good entry.
-
-It would be nice to avoid this situation by design while keeping the other properties.
 
 ### Complexity
 
 - At step $k$ the judge i must compare nodes i and $i+f(N,k)$, so knowing what the next judge should do is $O(1)$.
-- After $k$ steps the graph consists of $N+(k-1)\frac{N}{2}$ arrows and to compute the winners we need to flow points $\mathrm{diam}(G)$ times along these edges so the complexity is $O(Nk)$
-
-## NodeRank+
-
-Coming soon!
+- After $k$ steps the graph consists of $kN$ arrows and to compute the winners we need to flow points $\mathrm{diam}(G)$ times along these edges so the complexity is $O(N)$
 
 
 ## Contributing
 
-If you would like to make a suggestion, correct a typo or improve the algorithm/explanation/graphics, you can send a pull request, they are welcome !
+If you would like to make a suggestion, correct a typo or improve the algorithm/explanations/graphics, you're are welcome to send a pull request!
 
 ## License
 
