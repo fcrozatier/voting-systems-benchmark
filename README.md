@@ -68,7 +68,7 @@ When N is big enough there is a clear difference between the strategies:
 - The square root strategy is weakly better than the inverse strategy 82% of the time
 - The log strategy is weakly better than the square root strategy 76% of the time
 
-## Example
+### Example
 
 This is the decrease in diameter for the different strategies when $n=4433$
 
@@ -89,15 +89,7 @@ A naive way to select the best nodes would be to pick the ones with the most win
 https://user-images.githubusercontent.com/48696601/194752506-684f09a1-525d-4d52-aeeb-14a646df92fa.mp4
 
 
-Following the previous example, after step 8 each node has order 16. We can easily model the probabilities of the number of wins for a given node with a binomial distribution with parameters $n=16$ and $p=\frac{1}{2}$. The probability for a given node to win 9 or 10 over 10 comparisons is, using a binomial distribution with parameters $n=10$ and $p=\frac{1}{2}$:
-
-$$
-\frac{1}{2^{10}}\left(\binom{10}{9}+\binom{10}{10}\right)=\frac{11}{2^{10}}
-$$
-
-So in a competition with $2^{10}$ competitors this would select about 11 entries.
-
-But it's easiser to win against a competitor who lost all his comparisons than it is to win against a competitor who wins most his comparisons. So it's not enough to count to number of wins. We must take into account the relative strength of the loosing nodes.
+It's easiser to win against a competitor who lost all his comparisons than it is to win against a competitor who wins most his comparisons. So it's not enough to count to number of wins. We must take into account the relative strength of the loosing nodes.
 
 
 ## NodeRank
@@ -113,7 +105,7 @@ https://user-images.githubusercontent.com/48696601/194753795-f6d8412d-0606-4194-
 ### Complexity
 
 - At step $k$ the judge i must compare nodes i and $i+f(N,k)$, so knowing what the next judge should do is $O(1)$.
-- After $k$ steps the graph consists of $kN$ arrows and to compute the winners we need to flow points $\mathrm{diam}(G)$ times along these edges so the complexity is $O(N)$
+- After $k$ steps the graph consists of $kN$ arrows and to compute the winners we need to flow points $\mathrm{diam}(G)$ times along these edges so the complexity of the ranking is $O(N)$
 
 
 ## Contributing
