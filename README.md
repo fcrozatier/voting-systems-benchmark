@@ -1,6 +1,6 @@
 # NodeRank
 
-Algorithm for massive competion judging. See the [contributing](#contributing) section.
+Algorithm for massive competition judging. See the [contributing](#contributing) section.
 
 ## Description
 
@@ -14,7 +14,7 @@ This way entries correspond quite naturally to the nodes of a directed graph whe
 
 We want the comparison graph to have the following properties:
 1. It needs to be **connected**, since otherwise some islands of entries are not, even indirectly, comparable.
-2. It needs to have the smallest **diameter** possible. Information quality decreases over long distances, so if two entries are hundreds of comparisons appart, how to reliably tell which one is better?
+2. It needs to have the smallest **diameter** possible. Information quality decreases over long distances, so if two entries are hundreds of comparisons apart, how to reliably tell which one is better?
 3. Nodes need to have the **same order**. This is a fairness principle. Every entry should receive the same amount of attention and have the same number of comparisons: it would not be fair if an entry were compared only once while another entry had dozens of comparisons.
 4. Constructing the graph should be easy to scale up with more and more contributions (arrows) while keeping these four properties true.
 
@@ -24,9 +24,9 @@ Since we are talking about a peer review algorithm, these properties are realist
 
 The best graph satisfying these properties is the **complete graph** which has diameter 1 with all nodes connected.
 
-A complete graph with N nodes has $\frac{N(N-1)}{2}$ arrows so in practice we cannot expected to construct this graph, since each of the N competitors would need to rank about $\frac{N-1}{2}$ entries which in pratice is way too much.
+A complete graph with N nodes has $\frac{N(N-1)}{2}$ arrows so in practice we cannot expected to construct this graph, since each of the N competitors would need to rank about $\frac{N-1}{2}$ entries which in practice is way too much.
 
-So the principles above allow to relax the constaints of a complete graph, while keeping nice properties. Indeed the following algorithm creates a graph with N nodes whose diameter is exponentially decreasing after each iteration.
+So the principles above allow to relax the constraints of a complete graph, while keeping nice properties. Indeed the following algorithm creates a graph with N nodes whose diameter is exponentially decreasing after each iteration.
 
 ## Comparison graph
 
@@ -52,7 +52,7 @@ When comparing two strategies F1 and F2 for building the comparison graph, let's
 
 For the benchmark we've looked at the first 10 iterations of the algorithm, on random samples of graphs of order between 100 and 10000.
 
-The different stategies benchmarked are:
+The different strategies benchmarked are:
 - Powers of two: based on $f(N,k)=\frac{N}{2^k}$
 - Inverse: based on $f(N,k)=\frac{N}{1+k}$
 - Square root: based on $f(N,k)=\frac{N}{1+\sqrt{k}}$
@@ -89,12 +89,12 @@ A naive way to select the best nodes would be to pick the ones with the most win
 https://user-images.githubusercontent.com/48696601/194752506-684f09a1-525d-4d52-aeeb-14a646df92fa.mp4
 
 
-It's easiser to win against a competitor who lost all his comparisons than it is to win against a competitor who wins most his comparisons. So it's not enough to count to number of wins. We must take into account the relative strength of the loosing nodes.
+It's easier to win against a competitor who lost all his comparisons than it is to win against a competitor who wins most his comparisons. So it's not enough to count to number of wins. We must take into account the relative strength of the loosing nodes.
 
 
 ## NodeRank
 
-All nodes start with 1 point, so there are N points in the graph. This is a constant (the sum of all points) but points will flow in the graph: at each step the points of a given node are divided among its outgoing arrows. So a node who lost 10 out of 10 comparisons will only contribute 0.1 point to each winner. This node tends to lose often so it's not so meaningul to win against it. On the contrary a node who only lost one out of 10 comparisons will contribute one point to the winner. It means a lot more to win against this node.
+All nodes start with 1 point, so there are N points in the graph. This is a constant (the sum of all points) but points will flow in the graph: at each step the points of a given node are divided among its outgoing arrows. So a node who lost 10 out of 10 comparisons will only contribute 0.1 point to each winner. This node tends to lose often so it's not so meaningful to win against it. On the contrary a node who only lost one out of 10 comparisons will contribute one point to the winner. It means a lot more to win against this node.
 
 We apply this procedure $\mathrm{diam}(G)$ times (the diameter of the graph) to allow the information to flow between any two nodes of the graph. This way we get a more faithful representation of the value of nodes. The best ones are the ones with more points after $\mathrm{diam}(G)$ steps of this procedure.
 
