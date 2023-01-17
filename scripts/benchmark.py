@@ -1,4 +1,5 @@
 from math import ceil, log, sqrt
+from random import randint
 
 from scripts.classes import Benchmark
 
@@ -13,6 +14,22 @@ def inverseLog(N, k, i):
     if k <= 2:
         return i + ceil(N / (1 + sqrt(k)))
     return i + ceil(N / (2 + log(k)))
+
+
+def rand(N, k, i):
+    memo = {}
+
+    if not k in memo:
+        memo[k] = randint(2, N - 2)
+
+    return i + memo[k]
+
+
+Benchmark(
+    lambda N, k, i: rand(N, k, i),
+    lambda N, k, i: inverseLog(N, k, i),
+    sample=10,
+).strong(500, 5000)
 
 
 # I. Inverse VS inverse powers of two
@@ -65,10 +82,10 @@ def inverseLog(N, k, i):
 # - Strategy F2 is weakly better 23.68% of the time
 
 
-Benchmark(
-    lambda N, k, i: inverseLog(N, k, i),
-    lambda N, k, i: i + ceil(N / (1 + sqrt(k))),
-    lambda N, k, i: inverse(N, k, i),
-    lambda N, k, i: i + ceil(N / 2**k),
-    sample=1,
-).strong(1000, 5000)
+# Benchmark(
+#     lambda N, k, i: inverseLog(N, k, i),
+#     lambda N, k, i: i + ceil(N / (1 + sqrt(k))),
+#     lambda N, k, i: inverse(N, k, i),
+#     lambda N, k, i: i + ceil(N / 2**k),
+#     sample=1,
+# ).strong(1000, 5000)
