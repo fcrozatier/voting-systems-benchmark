@@ -37,15 +37,13 @@ class ComparisonGraph:
 
         while abs(self.F(self.size, step, 0)) > 1:
             step += 1
-            self.graph.add_edges_from(
-                (i, self.F(self.size, step, i) % self.size) for i in range(self.size)
-            )
+            self.graph.add_edges_from((i, self.F(self.size, step, i) % self.size) for i in range(self.size))
             yield nx.diameter(self.graph)
 
 
 class Benchmark:
     """
-    stategies: the different strategies F1, F2, F3 etc to compare
+    strategies: the different strategies F1, F2, F3 etc to compare
     """
 
     def __init__(
@@ -75,11 +73,9 @@ class Benchmark:
                 if step >= 10:
                     break
 
-                better = reduce(
-                    lambda a, b: a and b, (a <= b for a, b in pairwise(diameters))
-                )
+                better = reduce(lambda a, b: a and b, (a <= b for a, b in pairwise(diameters)))
 
-                # stategy that weakly wins
+                # strategy that weakly wins
                 if len(list(filter(lambda x: x == min(diameters), diameters))) == 1:
                     weak[diameters.index(min(diameters))] += 1
 
@@ -100,6 +96,4 @@ class Benchmark:
 
         print("\n")
         for i, p in enumerate(weak):
-            print(
-                f"- Strategy F{i+1} is weakly better {round(p/reduce(operator.add, weak) * 100, 2)}% of the time"
-            )
+            print(f"- Strategy F{i+1} is weakly better {round(p/reduce(operator.add, weak) * 100, 2)}% of the time")
