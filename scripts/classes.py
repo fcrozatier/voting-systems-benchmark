@@ -76,25 +76,26 @@ class Benchmark:
                 # is strategy1 better than strategy2 at this step?
                 better = reduce(lambda a, b: a and b, (a <= b for a, b in pairwise(diameters)))
 
-                # strategy that weakly wins
-                if len(list(filter(lambda x: x == min(diameters), diameters))) == 1:
-                    weak[diameters.index(min(diameters))] += 1
+                # strategy that weakly wins (in a strict sens a < b)
+                # if len(list(filter(lambda x: x == min(diameters), diameters))) == 1:
+                #     weak[diameters.index(min(diameters))] += 1
 
-                print(f"\t{diameters}, {better}")
+                if better:
+                    weak[0] += 1
+                else:
+                    weak[1] += 1
+
+                print(f"\t{diameters}, F1 <= F2: {better}")
                 if not better:
                     exceptions.add(n)
                     for (a, b) in pairwise(diameters):
-                        if a > b:
-                            delta.append(a - b)
+                        delta.append(abs(a - b))
 
         print("\n")
         print("Benchmark results")
         print("-----------------")
         print(f"Sample size: {self.sample}")
         print(f"F1 strongly better: {round(1 - len(exceptions)/(self.sample), 4)*100}%")
+        print(f"F1 weakly better: {round(weak[0]/reduce(operator.add, weak) * 100, 2)}%")
         if len(delta) > 0:
             print(f"Average diameter difference when not better: {mean(delta)}")
-
-        print("\n")
-        for i, p in enumerate(weak):
-            print(f"- Strategy F{i+1} is weakly better {round(p/reduce(operator.add, weak) * 100, 2)}% of the time")
