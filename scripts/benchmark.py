@@ -16,8 +16,16 @@ def inverseLog(N, k, i):
     return i + ceil(N / (2 + log(k)))
 
 
+memo = {}
+
+
 def rand(N, k, i):
-    memo = {}
+    global memo
+
+    # Reinitialize
+    if k == 2 and i == 0:
+        memo = {}
+        # memo[1] = 1
 
     if not k in memo:
         memo[k] = randint(2, N - 2)
@@ -25,11 +33,13 @@ def rand(N, k, i):
     return i + memo[k]
 
 
-Benchmark(
-    lambda N, k, i: rand(N, k, i),
-    lambda N, k, i: inverseLog(N, k, i),
-    sample=10,
-).strong(500, 5000)
+if __name__ == "__main__":
+
+    Benchmark(
+        lambda N, k, i: rand(N, k, i),
+        lambda N, k, i: inverseLog(N, k, i),
+        sample=10,
+    ).strong(500, 1500)
 
 
 # I. Inverse VS inverse powers of two
