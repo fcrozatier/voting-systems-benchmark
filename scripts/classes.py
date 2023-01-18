@@ -4,7 +4,6 @@ from itertools import pairwise
 from math import ceil
 from random import randint
 from statistics import mean
-from types import FunctionType
 
 import networkx as nx
 
@@ -22,8 +21,8 @@ class ComparisonGraph:
 
     def __init__(
         self,
-        size: int,
-        F: FunctionType = lambda N, k, i: i + ceil(N / 2**k),
+        size,
+        F=lambda N, k, i: i + ceil(N / 2**k),
     ):
         self.size = size
         self.F = F
@@ -48,10 +47,11 @@ class Benchmark:
 
     def __init__(
         self,
-        *strategies,
-        sample=100,
+        strategy1,
+        strategy2,
+        sample,
     ):
-        self.strategies = strategies
+        self.strategies = [strategy1, strategy2]
         self.sample = sample
 
     def strong(self, Nmin, Nmax):
@@ -73,6 +73,7 @@ class Benchmark:
                 if step >= 10:
                     break
 
+                # is strategy1 better than strategy2 at this step?
                 better = reduce(lambda a, b: a and b, (a <= b for a, b in pairwise(diameters)))
 
                 # strategy that weakly wins
@@ -90,7 +91,7 @@ class Benchmark:
         print("Benchmark results")
         print("-----------------")
         print(f"Sample size: {self.sample}")
-        print(f"Strongly better: {round(1 - len(exceptions)/(self.sample), 4)*100}%")
+        print(f"F1 strongly better: {round(1 - len(exceptions)/(self.sample), 4)*100}%")
         if len(delta) > 0:
             print(f"Average diameter difference when not better: {mean(delta)}")
 
