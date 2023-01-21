@@ -25,10 +25,13 @@ def rand(N, k, i):
     # Reinitialize
     if k == 2 and i == 0:
         memo = {}
-        # memo[1] = 1
 
     if not k in memo:
-        memo[k] = randint(2, N - 2)
+        # Generate a different value than previously
+        newValue = randint(2, N // 2)
+        while newValue in list(memo.values()):
+            newValue = randint(2, N // 2)
+        memo[k] = newValue
 
     return i + memo[k]
 
@@ -39,7 +42,7 @@ if __name__ == "__main__":
         lambda N, k, i: rand(N, k, i),
         lambda N, k, i: inverseLog(N, k, i),
         sample=10,
-    ).strong(500, 1500)
+    ).strong(4433, 4433)
 
 
 # I. Inverse VS inverse powers of two
