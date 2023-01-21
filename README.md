@@ -74,7 +74,7 @@ This is the decrease in diameter for the different strategies when $n=4433$
 
 
 <p align="center">
-  <img src="assets/example.png" alt="benchmark" width="600">
+  <img src="assets/benchmark.png" alt="benchmark" width="600">
 </p>
 
 
