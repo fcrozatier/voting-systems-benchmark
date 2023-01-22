@@ -4,12 +4,14 @@ from random import randint
 from scripts.classes import Benchmark
 
 
+# The inverse strategy
 def inverse(N, k, i):
     if k <= 2:
         return i + ceil(N / 2**k)
     return i + ceil(N / (k + 2))
 
 
+# The log strategy
 def inverseLog(N, k, i):
     if k <= 2:
         return i + ceil(N / (1 + sqrt(k)))
@@ -18,11 +20,11 @@ def inverseLog(N, k, i):
 
 memo = {}
 
-
+# The random strategy
 def rand(N, k, i):
     global memo
 
-    # Reinitialize
+    # Reinitialize on a new benchmark
     if k == 2 and i == 0:
         memo = {}
 
