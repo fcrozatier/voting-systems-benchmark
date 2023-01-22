@@ -88,9 +88,9 @@ When N is big enough there is a clear difference between the strategies:
 - The inverse strategy is strongly better than the power of two strategy in 100% of samples
 - The square root strategy is weakly better than the inverse strategy 82% of the time
 - The log strategy is weakly better than the square root strategy 76% of the time
-- The random strategy is almost as good always as the log strategy.
+- The random strategy is almost always as good as the log strategy.
 
-#### Conclusion
+### Conclusion
 
 The **random strategy** stands out for the following reasons:
 1. It performs consistently well, like the log strategy
