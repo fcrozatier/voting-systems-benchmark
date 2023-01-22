@@ -46,11 +46,12 @@ https://user-images.githubusercontent.com/48696601/186481367-c9e00009-77ee-4439-
 
 ## Research question
 
-An answer to the following question would help find a canonical way to build the graph:
+Answering the following open question would help make a big leap toward finding a canonical way to build the graph:
 
 > What is the 2k-regular graph of order N of smallest diameter?
 
-Any help on this is greatly appreciated.
+
+Since we lack a canonical way to build the graph, we can benchmark different strategies to find the best one.
 
 ## Benchmark
 
