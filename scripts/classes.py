@@ -3,7 +3,6 @@ from functools import reduce
 from itertools import pairwise
 from math import ceil
 from random import randint
-from statistics import mean
 
 import networkx as nx
 
