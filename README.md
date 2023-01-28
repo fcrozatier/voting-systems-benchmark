@@ -46,7 +46,7 @@ https://user-images.githubusercontent.com/48696601/186481367-c9e00009-77ee-4439-
 
 ### Research question
 
-Answering the following open question would help in finding a canonical way to build the graph:
+Answering the following question would help find a canonical way to build the graph:
 
 > What is the 2k-regular graph of order N of smallest diameter?
 
@@ -112,7 +112,7 @@ It's easier to win against a competitor who lost all his comparisons than it is 
 
 ### PageRank
 
-The situation is well suited for a [PageRank](https://en.wikipedia.org/wiki/PageRank): which will allow to flow points in the graph. The idea is the following:
+The situation is well suited for a [PageRank](https://en.wikipedia.org/wiki/PageRank) which is equivalent to flowing points in the graph. The idea is the following:
 
 All nodes start with 1 point, so there are N points in the graph. This is a constant (the sum of all points) and points will flow in the graph: at each step, the points of a given node are divided among its outgoing arrows. So a node who lost 10 out of 10 comparisons will only contribute 0.1 points to each winner. This node tends to lose often so it's not so meaningful to win against it. On the contrary, a node that only lost one out of 10 comparisons will contribute one point to the winner. It means a lot more to win against this node.
 
