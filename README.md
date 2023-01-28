@@ -1,24 +1,24 @@
-# NodeRank
-
-Algorithm for ranking entries in a massive competition. See the [contributing](#contributing) section.
+How to rank entries in a massive competition?
 
 ## Description
 
 In a big competition context, a few judges cannot rank all the entries, we need a **peer review** algorithm.
 
-Also, assigning an absolute number to an entry is quite hard, and we often need to reevaluate the number after judging a few entries. It is far easier to estimate whether an entry is better than another entry. This is why NodeRank uses **pairwise comparisons**, following other algorithms like [Gavel](https://www.anishathalye.com/2015/03/07/designing-a-better-judging-system/)
+Also, assigning an absolute number to an entry is quite hard, and we often need to reevaluate the number after judging a few entries. It is far easier to estimate whether an entry is better than another entry. Which leads us to **pairwise comparisons**, following other algorithms like [Gavel](https://www.anishathalye.com/2015/03/07/designing-a-better-judging-system/)
 
-This way entries correspond quite naturally to the nodes of a directed graph where a comparison between two nodes is an arrow pointing to the better entry. The following algorithm describes how to construct this **comparison graph** and how to rank entries from this graph.
+This way entries are the nodes of a directed graph where a comparison between two nodes is an arrow pointing to the better entry. We need to:
+1. Design the vote in order to generate a graph with nice properties
+2. Rank the entries from this network of votes.
 
 ## Principles
 
-We want the comparison graph to have the following properties:
+We want the graph to have the following properties:
 1. It must be **connected**, since otherwise some islands of entries are not, even indirectly, comparable.
 2. It should have the smallest **diameter** possible, otherwise if two entries are hundreds of comparisons apart, how to reliably tell which one is better?
-3. Nodes must have the **same order**. This is a fairness principle. Every entry should receive the same amount of attention and have the same number of comparisons: it would not be fair if an entry were compared only once while another entry had dozens of comparisons. So we must have a **regular** graph.
+3. Nodes must have the **same order**. This is a fairness principle. Every entry should receive the same amount of attention: it would not be fair if an entry were compared only once while another entry had dozens of comparisons. So the graph must be **regular**.
 4. Constructing the graph should be easy to scale up with more and more contributions (arrows) while keeping these four properties true.
 
-Since we are talking about a peer review algorithm, these properties are realistic because the graph will have many times more arrows than nodes by asking competitors to each contribute a few comparisons.
+Since we are talking about a peer review process, these properties are realistic because the graph will have many times more arrows than nodes by asking competitors to each contribute a few comparisons.
 
 ### Ideal case
 
@@ -28,9 +28,9 @@ A complete graph with N nodes has $\frac{N(N-1)}{2}$ arrows so in practice we ca
 
 The principles above allow us to relax the constraints of a complete graph while keeping nice properties. Indeed the following algorithm creates a graph with N nodes whose diameter is exponentially decreasing after each iteration.
 
-## Comparison graph
+## 1. The graph
 
-We can easily design a family of algorithms for building graphs with properties 1, 3 and 4 above. The idea is the following:
+We can easily design a family of algorithms generating graphs with properties 1, 3 and 4 above. The idea is the following:
 
 - Step 1: Connect all nodes in a cycle graph.
 - Step k: Connect node i with node $F(N,k,i)$ for some function F of N (the size), k (the step) and i (the current node).
@@ -44,9 +44,9 @@ A simple family of such functions is $F(N,k,i) = i + f(N,k)$ for f based on usua
 
 https://user-images.githubusercontent.com/48696601/186481367-c9e00009-77ee-4439-a22a-63dd4cd15114.mp4
 
-## Research question
+### Research question
 
-Answering the following open question would help make a big leap toward finding a canonical way to build the graph:
+Answering the following open question would help in finding a canonical way to build the graph:
 
 > What is the 2k-regular graph of order N of smallest diameter?
 
@@ -55,7 +55,7 @@ Since we lack a canonical way to build the graph, we can benchmark different str
 
 ## Benchmark
 
-When comparing two strategies F1 and F2 for building the comparison graph, let's say F1 is **strongly** better than F2 if at **every** step of the algorithm, the diameter given by strategy F1 is less than or equal to the one given by strategy F2. Let's say it's **weakly** better if on average more steps are in favor of F1 than F2.
+When comparing two strategies F1 and F2 for building the graph, let's say F1 is **strongly** better than F2 if at **every** step of the algorithm, the diameter given by strategy F1 is less than or equal to the one given by strategy F2. Let's say it's **weakly** better if on average more steps are in favor of F1 than F2.
 
 For the benchmark, we've looked at the first 10 iterations of the algorithm, on random samples of graphs of order between 100 and 10000.
 
@@ -94,10 +94,12 @@ When N is big enough there is a clear difference between the strategies:
 
 The **random strategy** stands out for the following reasons:
 1. It performs consistently well, like the log strategy
-2. The formula is simple and more canonical than the others
-3. It's the only one that converges to the **complete graph** of order N (in $k=\frac{N-1}{2}$ steps). The other strategies stop after connecting nodes closer and closer until i and i+1
+2. The formula is simple and deals with integers
+3. It's the only one that converges to the **complete graph** of order N (in $k=\frac{N-1}{2}$ steps). The other strategies stop after connecting nodes closer and closer until i and i+2
 
-## Naive ranking
+## 2. The ranking
+
+### Naive approach
 
 A naive way to select the best nodes would be to pick the ones with the most wins.
 
@@ -108,15 +110,18 @@ https://user-images.githubusercontent.com/48696601/194752506-684f09a1-525d-4d52-
 It's easier to win against a competitor who lost all his comparisons than it is to win against a competitor who wins most of his comparisons. So it's not enough to count the number of wins. We must take into account the relative strength of the losing nodes.
 
 
-## NodeRank
+### PageRank
 
-All nodes start with 1 point, so there are N points in the graph. This is a constant (the sum of all points) but points will flow in the graph: at each step, the points of a given node are divided among its outgoing arrows. So a node who lost 10 out of 10 comparisons will only contribute 0.1 points to each winner. This node tends to lose often so it's not so meaningful to win against it. On the contrary, a node that only lost one out of 10 comparisons will contribute one point to the winner. It means a lot more to win against this node.
+The situation is well suited for a [PageRank](https://en.wikipedia.org/wiki/PageRank): which will allow to flow points in the graph. The idea is the following:
 
-We apply this procedure $\mathrm{diam}(G)$ times (the diameter of the graph) to allow the information to flow between any two nodes of the graph. This way we get a more faithful representation of the value of nodes. The best ones are the ones with the most points after $\mathrm{diam}(G)$ steps of this procedure.
+All nodes start with 1 point, so there are N points in the graph. This is a constant (the sum of all points) and points will flow in the graph: at each step, the points of a given node are divided among its outgoing arrows. So a node who lost 10 out of 10 comparisons will only contribute 0.1 points to each winner. This node tends to lose often so it's not so meaningful to win against it. On the contrary, a node that only lost one out of 10 comparisons will contribute one point to the winner. It means a lot more to win against this node.
+
+We apply this procedure at least $\mathrm{diam}(G)$ times (the diameter of the graph) to allow the information to flow between any two nodes of the graph. The best nodes are the ones with the most points at the end of this procedure.
 
 
 https://user-images.githubusercontent.com/48696601/194753795-f6d8412d-0606-4194-9da3-c4530739ee48.mp4
 
+Notice at the end nodes D and E are equal with 0 points, but D should be better than E. Also if we ran the procedure one more time B would absorb A's point and all nodes but B (a sink) would have no points. To avoid these problems we use a [**damping factor**](https://en.wikipedia.org/wiki/PageRank#Damping_factor)
 
 ### Complexity
 
@@ -126,7 +131,7 @@ https://user-images.githubusercontent.com/48696601/194753795-f6d8412d-0606-4194-
 
 ## Contributing
 
-If you would like to contribute, improve the algorithm/explanations/graphics, make a suggestion, or correct a typo, you are welcome to send a pull request!
+If you would like to help, improve the algorithm/explanations/graphics, make a suggestion, or correct a typo, you are welcome to send a pull request!
 
 ## License
 
