@@ -18,6 +18,8 @@ We want the graph to have the following properties:
 3. Nodes must have the **same order**. This is a fairness principle. Every entry should receive the same amount of attention: it would not be fair if an entry were compared only once while another entry had dozens of comparisons. So the graph must be **regular**.
 4. Constructing the graph should be easy to scale up with more and more contributions (arrows) while keeping these four properties true.
 
+> We call such a graph a **bubble** since it is small and highly symmetric. And on a metaphorical level the competition itself is a small bubble around a shared interest.
+
 Since we are talking about a peer review process, these properties are realistic because the graph will have many times more arrows than nodes by asking competitors to each contribute a few comparisons.
 
 ### Ideal case
@@ -28,7 +30,7 @@ A complete graph with N nodes has $\frac{N(N-1)}{2}$ arrows so in practice we ca
 
 The principles above allow us to relax the constraints of a complete graph while keeping nice properties. Indeed the following algorithm creates a graph with N nodes whose diameter is exponentially decreasing after each iteration.
 
-## 1. The graph
+## Bubbles
 
 We can easily design a family of algorithms generating graphs with properties 1, 3 and 4 above. The idea is the following:
 
@@ -53,7 +55,7 @@ Answering the following question would help find a canonical way to build the gr
 
 Since we lack a canonical way to build the graph, we can benchmark different strategies to find the best one.
 
-## Benchmark
+## Benchmark: generating the smallest bubbles
 
 When comparing two strategies F1 and F2 for building the graph, let's say F1 is **strongly** better than F2 if at **every** step of the algorithm, the diameter given by strategy F1 is less than or equal to the one given by strategy F2. Let's say it's **weakly** better if on average more steps are in favor of F1 than F2.
 
@@ -97,7 +99,7 @@ The **random strategy** stands out for the following reasons:
 2. The formula is simple and deals with integers
 3. It's the only one that converges to the **complete graph** of order N (in $k=\frac{N-1}{2}$ steps). The other strategies stop after connecting nodes closer and closer until i and i+2
 
-## 2. The ranking
+## Ranking
 
 ### Naive approach
 
