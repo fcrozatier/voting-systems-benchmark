@@ -1,3 +1,5 @@
+# The Bubble
+
 How to rank entries in a massive competition?
 
 ## Description
@@ -13,18 +15,20 @@ This way entries are the nodes of a directed graph where a comparison between tw
 ## Principles
 
 We want the graph to have the following properties:
-1. It must be **connected**, since otherwise some islands of entries are not, even indirectly, comparable.
-2. It should have the smallest **diameter** possible, otherwise if two entries are hundreds of comparisons apart, how to reliably tell which one is better?
-3. Nodes must have the **same order**. This is a fairness principle. Every entry should receive the same amount of attention: it would not be fair if an entry were compared only once while another entry had dozens of comparisons. So the graph must be **regular**.
+1. It must be **[connected](https://en.wikipedia.org/wiki/Connectivity_(graph_theory)#Connected_vertices_and_graphs)**, since otherwise some islands of entries are not, even indirectly, comparable.
+2. It should have the smallest **[diameter](https://en.wikipedia.org/wiki/Distance_(graph_theory))** possible, otherwise if two entries are hundreds of comparisons apart, how to reliably tell which one is better?
+3. Nodes must have the **[same degree](https://en.wikipedia.org/wiki/Degree_(graph_theory))**. This is a fairness principle. Every entry should receive the same amount of attention: it would not be fair if an entry were compared only once while another entry had dozens of comparisons. So the graph must be **[regular](https://en.wikipedia.org/wiki/Regular_graph)**.
 4. Constructing the graph should be easy to scale up with more and more contributions (arrows) while keeping these four properties true.
 
 > We call such a graph a **bubble** since it is small and highly symmetric. And on a metaphorical level the competition itself is a small bubble around a shared interest.
+
+This is somewhat similar to a [small world network](https://en.wikipedia.org/wiki/Small-world_network) because of the small diameter, but a key difference is that a small world network is [clustered](https://en.wikipedia.org/wiki/Clustering_coefficient) which is not what we want here. To be fair to all entries we want the graph to be regular. The popularity of an entry should emerge from the votes themselves, not the topology of the graph.
 
 Since we are talking about a peer review process, these properties are realistic because the graph will have many times more arrows than nodes by asking competitors to each contribute a few comparisons.
 
 ### Ideal case
 
-The best graph satisfying these properties is the **complete graph** which has diameter 1 with all nodes connected.
+The best graph satisfying these properties is the **[complete graph](https://en.wikipedia.org/wiki/Complete_graph)** which has diameter 1 with all nodes connected.
 
 A complete graph with N nodes has $\frac{N(N-1)}{2}$ arrows so in practice we cannot expect to build this graph, since each of the N competitors would have to rank about $\frac{N-1}{2}$ entries, which in practice is way too much.
 
@@ -37,9 +41,9 @@ We can easily design a family of algorithms generating graphs with properties 1,
 - Step 1: Connect all nodes in a cycle graph.
 - Step k: Connect node i with node $F(N,k,i)$ for some function F of N (the size), k (the step) and i (the current node).
 
-After step 1 all nodes have order 2 and there are N arrows. The diameter is $\mathrm{floor}(\frac{N}{2})$.
+After step 1 all nodes have degree 2 and there are N arrows. The diameter is $\mathrm{floor}(\frac{N}{2})$.
 
-After step k all nodes have order $2k$ (F must be injective) and the graph has $kN$ arrows. The diameter at step k depends on the chosen function F, so we need to perform a benchmark to find the best function possible.
+After step k all nodes have degree $2k$ (F must be injective) and the graph has $kN$ arrows. The diameter at step k depends on the chosen function F, so we need to perform a benchmark to find the best function possible.
 
 A simple family of such functions is $F(N,k,i) = i + f(N,k)$ for f based on usual functions like $\frac{N}{k}$ or $\frac{N}{2^k}$ etc. The video below shows the steps when $f(N,k) = \mathrm{ceil}(\frac{N}{2^k})$
 
