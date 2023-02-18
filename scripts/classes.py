@@ -33,7 +33,7 @@ class ComparisonGraph:
         self.graph.add_edges_from((i, (i + 1) % self.size) for i in range(self.size))
         yield nx.diameter(self.graph)
 
-        while abs(self.F(self.size, step, 0)) > 1:
+        while True:
             step += 1
             self.graph.add_edges_from((i, self.F(self.size, step, i) % self.size) for i in range(self.size))
             yield nx.diameter(self.graph)
@@ -58,7 +58,6 @@ class Benchmark:
         Test whether F1 is strongly superior to F2 and F2 strongly superior to F3 etc.
         """
         exceptions = set()
-        delta = []
         weak = [0] * len(self.strategies)
         for i in range(self.sample):
             n = randint(Nmin, Nmax)
@@ -69,7 +68,7 @@ class Benchmark:
 
             for step, diameters in enumerate(zip(*(g.diameters() for g in graphs))):
                 # Prevent too many iterations: the diameter changes the most in the first iterations
-                if step >= 10:
+                if step >= 9:
                     break
 
                 # is strategy1 better than strategy2 at this step?
