@@ -51,8 +51,8 @@ def rand2(N, k, i):
     if k == 2 and i == 0:
         memo2 = {"permutation": [], "edges": []}
 
-    # Reinitialize on every other benchmark step
-    if k % 2 == 0 and i == 0:
+    # Reinitialize on every step
+    if i == 0:
         G = nx.Graph()
         G.add_nodes_from(range(N))
         G.add_edges_from(memo2["edges"])
@@ -83,7 +83,7 @@ if __name__ == "__main__":
         lambda N, k, i: rand2(N, k, i),
         lambda N, k, i: rand(N, k, i),
         sample=10,
-    ).strong(4433, 4433)
+    ).strong(1000, 1000)
 
 
 # I. Inverse VS inverse powers of two
