@@ -1,5 +1,9 @@
+from itertools import pairwise
 from math import ceil, log, sqrt
 from random import randint
+
+import networkx as nx
+import numpy as np
 
 from scripts.classes import Benchmark
 
@@ -38,11 +42,46 @@ def rand(N, k, i):
     return i + memo[k]
 
 
+memo2 = {"permutation": [], "edges": []}
+
+
+def rand2(N, k, i):
+    global memo2
+
+    if k == 2 and i == 0:
+        memo2 = {"permutation": [], "edges": []}
+
+    # Reinitialize on every other benchmark step
+    if k % 2 == 0 and i == 0:
+        G = nx.Graph()
+        G.add_nodes_from(range(N))
+        G.add_edges_from(memo2["edges"])
+        # Get a random n-cycle
+        permutation = np.random.permutation(N)
+        edges = list(pairwise(permutation)) + [(permutation[0], permutation[-1])]
+        count = 0
+        # Make sure cycle has no edge in the graph to ensure graph regularity
+        while any(e in G.edges for e in edges):
+            permutation = np.random.permutation(N)
+            edges = list(pairwise(permutation)) + [(permutation[0], permutation[-1])]
+            count += 1
+        print(f"found n-cycle after {count} tries")
+        memo2["permutation"] = permutation
+        memo2["edges"] += edges
+
+    ([index],) = np.where(memo2["permutation"] == i)
+
+    if k % 2 == 0:
+        return memo2["permutation"][(index - 1) % N]
+
+    return memo2["permutation"][(index + 1) % N]
+
+
 if __name__ == "__main__":
 
     Benchmark(
+        lambda N, k, i: rand2(N, k, i),
         lambda N, k, i: rand(N, k, i),
-        lambda N, k, i: inverseLog(N, k, i),
         sample=10,
     ).strong(4433, 4433)
 
