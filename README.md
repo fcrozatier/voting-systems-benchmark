@@ -1,4 +1,4 @@
-# The Bubble
+# Bubble graph
 
 How to rank entries in a massive competition?
 
@@ -14,7 +14,7 @@ This way entries are the nodes of a directed graph where a comparison between tw
 
 ## Principles
 
-We want the graph to have the following properties:
+We want the pairing graph to have the following properties:
 1. It must be **[connected](https://en.wikipedia.org/wiki/Connectivity_(graph_theory)#Connected_vertices_and_graphs)**, since otherwise some islands of entries are not, even indirectly, comparable.
 2. It should have the smallest **[diameter](https://en.wikipedia.org/wiki/Distance_(graph_theory))** possible, otherwise if two entries are hundreds of comparisons apart, how to reliably tell which one is better?
 3. Nodes must have the **[same degree](https://en.wikipedia.org/wiki/Degree_(graph_theory))**. This is a fairness principle. Every entry should receive the same amount of attention: it would not be fair if an entry were compared only once while another entry had dozens of comparisons. So the graph must be **[regular](https://en.wikipedia.org/wiki/Regular_graph)**.
@@ -50,16 +50,8 @@ A simple family of such functions is $F(N,k,i) = i + f(N,k)$ for f based on usua
 
 https://user-images.githubusercontent.com/48696601/186481367-c9e00009-77ee-4439-a22a-63dd4cd15114.mp4
 
-### Research question
 
-Answering the following question would help find a canonical way to build the graph:
-
-> What is the 2k-regular graph of order N of smallest diameter?
-
-
-Since we lack a canonical way to build the graph, we can benchmark different strategies to find the best one.
-
-## Benchmark: generating the smallest bubbles
+## Benchmark: generating the smallest bubble
 
 When comparing two strategies F1 and F2 for building the graph, let's say F1 is **strongly** better than F2 if at **every** step of the algorithm, the diameter given by strategy F1 is less than or equal to the one given by strategy F2. Let's say it's **weakly** better if on average more steps are in favor of F1 than F2.
 
@@ -85,7 +77,7 @@ This is the decrease in diameter for the different strategies when $n=4433$, sho
 
 
 
-After 8 steps with the log strategy, the graph has diameter 6.
+After 4 steps with the v2 strategy, the graph has diameter 6.
 
 ### Results
 
@@ -95,13 +87,6 @@ When N is big enough there is a clear difference between the strategies:
 - The square root strategy is weakly better than the inverse strategy 82% of the time
 - The log strategy is weakly better than the square root strategy 76% of the time
 - The random strategy is almost always as good as the log strategy.
-
-### Conclusion
-
-The **random strategy** stands out for the following reasons:
-1. It performs consistently well, like the log strategy
-2. The formula is simple and deals with integers
-3. It's the only one that converges to the **complete graph** of order N (in $k=\frac{N-1}{2}$ steps). The other strategies stop after connecting nodes closer and closer until i and i+2
 
 ## Ranking
 
