@@ -72,7 +72,7 @@ This is the decrease in diameter for the different strategies when $n=4433$, sho
 
 
 <p align="center">
-  <img src="assets/benchmark.png" alt="benchmark" width="600">
+  <img src="assets/benchmark.png" alt="benchmark" width="800">
 </p>
 
 
@@ -114,15 +114,6 @@ https://user-images.githubusercontent.com/48696601/194753795-f6d8412d-0606-4194-
 
 Notice at the end nodes D and E are equal with 0 points, but D should be better than E. Also if we ran the procedure one more time B would absorb A's point and all nodes but B (a sink) would have no points. To avoid these problems we use a [**damping factor**](https://en.wikipedia.org/wiki/PageRank#Damping_factor)
 
-### Complexity
-
-- At step $k$ the judge i must compare nodes i and $i+f(N,k)$, so knowing what the next judge should do is $O(1)$.
-- After $k$ steps the graph consists of $kN$ arrows and to compute the winners we need to flow points $\mathrm{diam}(G)$ times along these edges so the complexity of the ranking is $O(N)$
-
-
-## Contributing
-
-If you would like to help, improve the algorithm/explanations/graphics, make a suggestion, or correct a typo, you are welcome to send a pull request!
 
 ## License
 
