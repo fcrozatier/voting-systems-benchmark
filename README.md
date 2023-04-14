@@ -1,4 +1,4 @@
-# Bubble graph
+# NodeRank
 
 How to rank entries in a massive competition?
 
