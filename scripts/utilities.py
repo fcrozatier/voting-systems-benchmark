@@ -1,6 +1,7 @@
 from itertools import combinations, pairwise
 
 import numpy as np
+from scipy.stats import kendalltau
 
 
 def random_cycle(size):
@@ -67,9 +68,28 @@ def random_expander_edges(k, N):
     return list(edges)
 
 
-def kendall_tau_distance(list_a: list, list_b: list) -> int:
-    """Compute the Kendall tau distance between to ordering of the same set"""
+def kendall_tau_naive(list_a: list, list_b: list) -> int:
+    """
+    Compute the normalized Kendall tau distance between to ordering of the same set
+
+    Naive O(n^2) implementation
+    """
     tau = 0
     for i, j in combinations(list_a, 2):
         tau += np.sign(list_a.index(i) - list_a.index(j)) == -np.sign(list_b.index(i) - list_b.index(j))
-    return tau
+
+    n = len(list_a)
+    return 2 * tau / (n * (n - 1))
+
+
+def make_ranking(L: list):
+    return [L.index(i) for i in range(len(L))]
+
+
+def kendall_tau(list_a, list_b):
+    """
+    Use Scipy implementation to compute kendall tau between two lists.
+
+    Need to transform permutations into rankings first
+    """
+    return (1 - kendalltau(make_ranking(list_a), make_ranking(list_b)).statistic) / 2
