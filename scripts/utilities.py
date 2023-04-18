@@ -26,6 +26,10 @@ def random_cycle(size):
     return items
 
 
+def edges_from_cycle(cycle):
+    return [*list(pairwise(cycle)), (cycle[-1], cycle[0])]
+
+
 def sort_tuple(tuple):
     """Returns the tuple (a,b) if a < b and (b,a) otherwise"""
 
@@ -45,7 +49,7 @@ def random_expander_edges(k, N):
         return []
     elif N < 5:
         cycle = range(N)
-        return [*list(pairwise(cycle)), (cycle[-1], cycle[0])]
+        return edges_from_cycle(cycle)
 
     assert k > 1, "You need at least 2 cycles"
     assert N * (N - 1) > 2 * k, f"There is not enough room for {k} cycles in a graph of size {N}"
@@ -57,7 +61,7 @@ def random_expander_edges(k, N):
         while len(edges) != (i + 1) * N:
             cycle = random_cycle(N)
 
-            cycle_edges = [*list(pairwise(cycle)), (cycle[-1], cycle[0])]
+            cycle_edges = edges_from_cycle(cycle)
             cycle_edges_sorted = list(map(sort_tuple, cycle_edges))
             edges_copy = set([*edges, *cycle_edges_sorted])
 
