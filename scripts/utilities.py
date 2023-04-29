@@ -97,3 +97,19 @@ def kendall_tau(list_a, list_b):
     Need to transform permutations into rankings first
     """
     return (1 - kendalltau(make_ranking(list_a), make_ranking(list_b)).statistic) / 2
+
+
+def top_10_closeness(list_a, list_b):
+    """
+    A pseudo-metric to check whether list_a and list_b have a similar top 10%
+
+    It is symmetric and transitive but not reflexive
+    """
+    assert len(list_a) == len(list_b), "Lists must have the same size"
+
+    l = len(list_a) // 10
+
+    set_a = set(list_a[:l])
+    set_b = set(list_b[:l])
+
+    return 1 - len(set_a.intersection(set_b)) / l
