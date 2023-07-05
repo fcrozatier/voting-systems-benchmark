@@ -1,5 +1,7 @@
 from itertools import combinations, pairwise
+from random import random
 
+import networkx as nx
 import numpy as np
 from scipy.stats import kendalltau
 
@@ -26,7 +28,7 @@ def random_cycle(size):
     return items
 
 
-def edges_from_cycle(cycle):
+def cycle_edges(cycle: list[int]):
     return [*list(pairwise(cycle)), (cycle[-1], cycle[0])]
 
 
@@ -49,7 +51,7 @@ def random_expander_edges(k, N):
         return []
     elif N < 5:
         cycle = range(N)
-        return edges_from_cycle(cycle)
+        return cycle_edges(cycle)
 
     assert k > 1, "You need at least 2 cycles"
     assert N * (N - 1) > 2 * k, f"There is not enough room for {k} cycles in a graph of size {N}"
@@ -61,7 +63,7 @@ def random_expander_edges(k, N):
         while len(edges) != (i + 1) * N:
             cycle = random_cycle(N)
 
-            cycle_edges = edges_from_cycle(cycle)
+            cycle_edges = cycle_edges(cycle)
             cycle_edges_sorted = list(map(sort_tuple, cycle_edges))
             edges_copy = set([*edges, *cycle_edges_sorted])
 
@@ -113,3 +115,38 @@ def top_10_closeness(list_a, list_b):
     set_b = set(list_b[:l])
 
     return 1 - len(set_a.intersection(set_b)) / l
+
+
+def random_ranking(n: int) -> list[int]:
+    """A random ranking is a random permutation of size n"""
+    return list(np.random.permutation(n))
+
+
+def vote(pair: tuple, ranking: list, p=1):
+    """Vote on a pair of entries.
+
+    Returns (a,b) with probability p if b is ranked higher than a in the ranking, and (b,a) accordingly
+    """
+    a, b = pair
+
+    if ranking.index(a) < ranking.index(b):
+        if random() < p:
+            return (a, b)
+        else:
+            return (b, a)
+    else:
+        if random() < p:
+            return (b, a)
+        else:
+            return (a, b)
+
+
+def page_ranked(G):
+    """Returns the ranked list of vertices of G, according to page rank"""
+
+    # Compute PageRank
+    pr = nx.pagerank(G)
+    # Sort entries with decreasing score
+    sorted_entries = sorted(list(pr.items()), key=lambda e: e[1])
+    # Return the sorted entries numbers
+    return list(map(lambda x: x[0], sorted_entries))
