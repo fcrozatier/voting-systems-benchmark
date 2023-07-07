@@ -73,7 +73,7 @@ def independent_cycle(edges, edge_list):
 
         if len(set(edges)) == 2 and edge not in redundant_edges:
             a, b = edge
-            new_edges.append(edge)
+            new_edges.append(tuple(sorted(edge)))
             redundant_nodes.remove(a)
             redundant_nodes.remove(b)
 
@@ -113,7 +113,7 @@ def random_expander_edges(k, N):
             cycle = random_cycle(N)
 
             cycle_edges = cycle_edges(cycle)
-            cycle_edges_sorted = list(map(sort_tuple, cycle_edges))
+            cycle_edges_sorted = list(map(sort_tuples, cycle_edges))
             edges_copy = set([*edges, *cycle_edges_sorted])
 
             if len(edges_copy) == len(edges) + N:
@@ -177,14 +177,15 @@ def vote(pair: tuple, ranking: list, p=1):
     Returns (a,b) with probability p if b is ranked higher than a in the ranking, and (b,a) accordingly
     """
     a, b = pair
+    r = random()
 
     if ranking.index(a) < ranking.index(b):
-        if random() < p:
+        if r < p:
             return (a, b)
         else:
             return (b, a)
     else:
-        if random() < p:
+        if r < p:
             return (b, a)
         else:
             return (a, b)
