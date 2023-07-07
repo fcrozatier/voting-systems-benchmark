@@ -58,8 +58,30 @@ def test_random_cycle(N):
 @pytest.mark.parametrize("N", [2, 3, 4])
 def test_cycle_edges(N):
     cycle = random_cycle(N)
+    edges = cycle_edges(cycle)
 
-    assert len(cycle_edges(cycle)) == N
+    assert len(edges) == N
+
+    for a, b in edges:
+        assert a < b
+
+
+def test_sort_tuples():
+    tuples = [(1, 0), (0, 2), (5, 4)]
+    sorted_tuples = sort_tuples(tuples)
+
+    assert sorted_tuples == [(0, 1), (0, 2), (4, 5)]
+
+
+def test_independent_cycle():
+    # In the case of a 5 cycle, the function manages to find the star
+    edges = [(1, 3), (3, 4), (4, 2), (2, 5), (5, 1)]
+    edge_list = [(1, 2), (2, 3), (3, 4), (4, 5), (5, 1)]
+
+    new_cycle = independent_cycle(edges, edge_list)
+
+    assert len(new_cycle) == 5
+    assert set(sort_tuples(new_cycle)) == set(sort_tuples([(1, 3), (3, 5), (5, 2), (2, 4), (4, 1)]))
 
 
 def test_page_ranked():
@@ -67,5 +89,5 @@ def test_page_ranked():
     G.add_nodes_from(range(3))
     G.add_edges_from([(2, 1), (2, 1), (1, 0)])
 
-    rank = page_ranked(G)
+    rank = page_rank(G)
     assert rank == [2, 1, 0]

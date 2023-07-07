@@ -1,5 +1,5 @@
-from itertools import combinations, pairwise
-from random import random
+from itertools import chain, combinations, pairwise
+from random import random, sample
 
 import networkx as nx
 import numpy as np
@@ -29,13 +29,62 @@ def random_cycle(size):
 
 
 def cycle_edges(cycle: list[int]):
-    return [*list(pairwise(cycle)), (cycle[-1], cycle[0])]
+    """
+    Returns the list of edges making a cycle, with each tuple sorted
+    """
+    return sort_tuples([*list(pairwise(cycle)), (cycle[-1], cycle[0])])
 
 
-def sort_tuple(tuple):
+def sort_tuples(tuples: list[tuple]):
     """Returns the tuple (a,b) if a < b and (b,a) otherwise"""
 
-    return tuple if min(tuple) == tuple[0] else (tuple[1], tuple[0])
+    return list(map(lambda x: tuple(sorted(x)), tuples))
+
+
+def independent_cycle(edges, edge_list):
+    """
+    Returns a new cycle that is independent from edge_list
+    """
+    sorted_edges = set(sort_tuples(edges))
+    sorted_edge_list = set(sort_tuples(edge_list))
+
+    redundant_edges = list(sorted_edges.intersection(sorted_edge_list))
+    redundant_nodes = list(chain.from_iterable(redundant_edges))
+
+    def permute(nodes_list, times=100, force=False):
+        for _ in range(times):
+            permuted_edges = sort_tuples(pairwise(np.random.permutation(nodes_list)))
+
+            intersection_size = len(set(permuted_edges).intersection(redundant_edges))
+            if intersection_size == 0 or force:
+                return permuted_edges
+
+        return None
+
+    # try to permute all the redundant nodes a few times
+    permuted_edges = permute(redundant_nodes)
+    if permuted_edges:
+        return list((sorted_edges.difference(redundant_edges)).union(permuted_edges))
+
+    # try to find new independent pairs from redundant ones
+    new_edges = []
+    for i in range(len(redundant_edges)):
+        edge = tuple(sorted(sample(redundant_nodes, 2)))
+
+        if len(set(edges)) == 2 and edge not in redundant_edges:
+            a, b = edge
+            new_edges.append(edge)
+            redundant_nodes.remove(a)
+            redundant_nodes.remove(b)
+
+    # try again to permute the remaining edges
+    permuted_edges = permute(redundant_nodes)
+    if permuted_edges:
+        return list((sorted_edges.difference(redundant_edges)).union(permuted_edges, new_edges))
+
+    # otherwise no luck
+    permuted_edges = permute(redundant_nodes, times=1, force=True)
+    return list((sorted_edges.difference(redundant_edges)).union(permuted_edges, new_edges))
 
 
 def random_expander_edges(k, N):
@@ -101,7 +150,7 @@ def kendall_tau(list_a, list_b):
     return (1 - kendalltau(make_ranking(list_a), make_ranking(list_b)).statistic) / 2
 
 
-def top_10_closeness(list_a, list_b):
+def top_10(list_a, list_b):
     """
     A pseudo-metric to check whether list_a and list_b have a similar top 10%
 
@@ -141,7 +190,7 @@ def vote(pair: tuple, ranking: list, p=1):
             return (a, b)
 
 
-def page_ranked(G):
+def page_rank(G):
     """Returns the ranked list of vertices of G, according to page rank"""
 
     # Compute PageRank
