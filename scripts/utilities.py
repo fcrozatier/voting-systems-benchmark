@@ -156,7 +156,7 @@ def top_10(list_a, list_b):
 
     It is symmetric and transitive but not reflexive
     """
-    assert len(list_a) == len(list_b), "Lists must have the same size"
+    assert set(list_a) == set(list_b), "Lists must have the same elements"
 
     l = len(list_a) // 10
 
@@ -174,7 +174,7 @@ def random_ranking(n: int) -> list[int]:
 def vote(pair: tuple, ranking: list, p=1):
     """Vote on a pair of entries.
 
-    Returns (a,b) with probability p if b is ranked higher than a in the ranking, and (b,a) accordingly
+    Returns (a,b) with probability p if b is ranked higher than a in the ranking, and (b,a) otherwise
     """
     a, b = pair
     r = random()
@@ -191,7 +191,7 @@ def vote(pair: tuple, ranking: list, p=1):
             return (a, b)
 
 
-def page_rank(G):
+def page_rank(G: nx.DiGraph):
     """Returns the ranked list of vertices of G, according to page rank"""
 
     # Compute PageRank
