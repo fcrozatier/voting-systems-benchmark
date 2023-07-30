@@ -1,4 +1,4 @@
-import crowd_bt
+from crowd_bt import bt
 from numpy.random import choice, random, shuffle
 
 
@@ -12,11 +12,11 @@ def maybe_init_annotator(annotator, items):
 def choose_next(annotator, items):
     shuffle(items)  # useful for argmax case as well in the case of ties
 
-    if random() < crowd_bt.EPSILON:
+    if random() < bt.EPSILON:
         return items[0]
     else:
-        return crowd_bt.argmax(
-            lambda i: crowd_bt.expected_information_gain(
+        return bt.argmax(
+            lambda i: bt.expected_information_gain(
                 annotator.alpha, annotator.beta, annotator.prev.mu, annotator.prev.sigma_sq, i.mu, i.sigma_sq
             ),
             items,
@@ -30,7 +30,7 @@ def perform_vote(annotator, next_won):
     else:
         winner = annotator.prev
         loser = annotator.next
-    u_alpha, u_beta, u_winner_mu, u_winner_sigma_sq, u_loser_mu, u_loser_sigma_sq = crowd_bt.update(
+    u_alpha, u_beta, u_winner_mu, u_winner_sigma_sq, u_loser_mu, u_loser_sigma_sq = bt.update(
         annotator.alpha, annotator.beta, winner.mu, winner.sigma_sq, loser.mu, loser.sigma_sq
     )
     annotator.alpha = u_alpha

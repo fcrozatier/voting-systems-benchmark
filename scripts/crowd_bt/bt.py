@@ -1,6 +1,5 @@
 # https://github.com/anishathalye/gavel/blob/master/gavel/crowd_bt.py
 
-from datetime import datetime
 
 from numpy import exp, log
 from scipy.special import betaln, psi
