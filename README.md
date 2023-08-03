@@ -1,4 +1,4 @@
-# NodeRank
+# Massive Voting System
 
 How to rank entries in a massive competition?
 
