@@ -1,6 +1,6 @@
 # Massive Voting System
 
-How to rank entries in a massive competition?
+Benchmarking voting systems for massive competition
 
 ## Description
 
