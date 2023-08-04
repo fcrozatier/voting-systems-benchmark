@@ -192,38 +192,22 @@ def vote(pair: tuple, ranking: list, p=1):
 
 
 def page_rank(G: nx.DiGraph):
-    """Returns the ranked list of vertices of G, according to page rank"""
+    """
+    Returns the ranked list of vertices of G in decreasing order, according to page rank
+    """
 
     # Compute PageRank
     pr = nx.pagerank(G)
     # Sort entries with decreasing score
-    sorted_entries = sorted(list(pr.items()), key=lambda e: e[1])
+    sorted_entries = sorted(list(pr.items()), key=lambda e: -e[1])
     # Return the sorted entries numbers
     return list(map(lambda x: x[0], sorted_entries))
 
 
-def bradley_terry(M: np.ndarray[int], iterations=20, p=[]):
-    N = M.shape[0]
+def ranking_from_scores(array):
+    """
+    Returns a ranking in decreasing order from a list of scores
+    """
+    sorted_array = sorted(list(enumerate(array)), key=lambda e: -e[1])
 
-    if p == []:
-        # Initial points
-        p = [1 / N for _ in range(N)]
-
-    # https://en.wikipedia.org/wiki/Bradley-Terry_model#Estimating_the_parameters
-    def new_p(i):
-        W_i = sum(M[i])
-        D = 0
-        for j in range(N):
-            if j != i:
-                D += (M[i][j] + M[j][i]) / (p[i] + p[j])
-
-        return W_i / D
-
-    new_p_vector = [new_p(i) for i in range(N)]
-    new_p_normalized = [v / sum(new_p_vector) for v in new_p_vector]
-
-    if iterations == 1:
-        return new_p_normalized
-    else:
-        iterations -= 1
-        return bradley_terry(M, iterations, new_p_normalized)
+    return [i for (i, _) in sorted_array]
