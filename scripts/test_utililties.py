@@ -85,15 +85,27 @@ def test_independent_cycle():
     assert set(sort_tuples(new_cycle)) == set(sort_tuples([(1, 3), (3, 5), (5, 2), (2, 4), (4, 1)]))
 
 
+def test_top_10():
+    ranking_1 = list(range(10))
+    ranking_2 = sorted(ranking_1, reverse=True)
+
+    assert top_10(ranking_1, ranking_1) == 0
+    assert top_10(ranking_1, ranking_2) == 1
+
+    ranking_3 = [1, 2, 3, 4, 5, 6, 7, 8, 0, 9]
+
+    assert top_10(ranking_1, ranking_3) == 0
+
+
 def test_page_ranked():
     G = nx.DiGraph()
     G.add_nodes_from(range(3))
     G.add_edges_from([(2, 1), (2, 1), (1, 0)])
 
     rank = page_rank(G)
-    assert rank == [0, 1, 2]
+    assert rank == [2, 1, 0]
 
 
 def test_ranking_from_scores():
     values = [0.139, 0.226, 0.143, 0.492]
-    assert ranking_from_scores(values) == [3, 1, 2, 0]
+    assert ranking_from_scores(values) == [0, 2, 1, 3]

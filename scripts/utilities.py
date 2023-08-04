@@ -150,18 +150,18 @@ def kendall_tau(list_a, list_b):
     return (1 - kendalltau(make_ranking(list_a), make_ranking(list_b)).statistic) / 2
 
 
-def top_10(list_a, list_b):
+def top_10(ranking_a, ranking_b):
     """
-    A pseudo-metric to check whether list_a and list_b have a similar top 10%
+    A pseudo-metric to check whether two rankings (increasing order) have a similar top 10%
 
     It is symmetric and transitive but not reflexive
     """
-    assert set(list_a) == set(list_b), "Lists must have the same elements"
+    assert set(ranking_a) == set(ranking_b), "Lists must have the same elements"
 
-    l = len(list_a) // 10
+    l = len(ranking_a) // 10
 
-    set_a = set(list_a[:l])
-    set_b = set(list_b[:l])
+    set_a = set(ranking_a[-l:])
+    set_b = set(ranking_b[-l:])
 
     return 1 - len(set_a.intersection(set_b)) / l
 
@@ -193,21 +193,21 @@ def vote(pair: tuple, ranking: list, p=1):
 
 def page_rank(G: nx.DiGraph):
     """
-    Returns the ranked list of vertices of G in decreasing order, according to page rank
+    Returns the ranked list of vertices of G in increasing order, according to page rank
     """
 
     # Compute PageRank
     pr = nx.pagerank(G)
     # Sort entries with decreasing score
-    sorted_entries = sorted(list(pr.items()), key=lambda e: -e[1])
+    sorted_entries = sorted(list(pr.items()), key=lambda e: e[1])
     # Return the sorted entries numbers
     return list(map(lambda x: x[0], sorted_entries))
 
 
 def ranking_from_scores(array):
     """
-    Returns a ranking in decreasing order from a list of scores
+    Returns a ranking in increasing order from a list of scores
     """
-    sorted_array = sorted(list(enumerate(array)), key=lambda e: -e[1])
+    sorted_array = sorted(list(enumerate(array)), key=lambda e: e[1])
 
     return [i for (i, _) in sorted_array]
