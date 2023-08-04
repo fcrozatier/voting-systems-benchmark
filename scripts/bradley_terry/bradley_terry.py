@@ -33,7 +33,7 @@ def bradley_terry_scores(M: np.ndarray[int], iterations=20, scores=[]):
         return bradley_terry_scores(M, iterations, normalized_new_scores)
 
 
-def bt(ranking: list[int], vote_budget: int, reassess=1, p=0.9):
+def BT(ranking: list[int], vote_budget: int, reassess=1, p=0.9):
     """
     ranking: the 'true' ranking
     vote_budget: how many votes to make
