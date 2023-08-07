@@ -1,4 +1,5 @@
 import networkx as nx
+import numpy as np
 from utilities import *
 
 
@@ -43,4 +44,4 @@ def iteratedPageRank(ranking: list[int], vote_budget: int, reassess=1, p=0.9):
             continue
         break
 
-    return G
+    return page_rank(G)
