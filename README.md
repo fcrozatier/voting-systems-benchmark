@@ -1,16 +1,17 @@
-# Massive Voting System
+# Massive Voting Systems
 
-Benchmarking voting systems for massive competition
+Voting systems for massive competitions
 
 ## Description
 
-In a big competition context, a few judges cannot rank all the entries, we need a **peer review** algorithm.
+This repo implements and benchmarks different voting systems for massive competitions and tries to answer the natural question: is there a better approach?
 
-Also, assigning an absolute number to an entry is quite hard, and we often need to reevaluate the number after judging a few entries. It is far easier to estimate whether an entry is better than another entry. Which leads us to **pairwise comparisons**, following other algorithms like [Gavel](https://www.anishathalye.com/2015/03/07/designing-a-better-judging-system/)
+## Benchmarking
 
-This way entries are the nodes of a directed graph where a comparison between two nodes is an arrow pointing to the better entry. We need to:
-1. Design the vote in order to generate a graph with nice properties
-2. Rank the entries from this network of votes.
+To benchmark and compare the voting systems we start by generating a random ranking on N entries, their "true" ranking.
+
+The best voting systems correctly infer the true ranking from the aggregation of individual rankings.
+
 
 ## References
 
