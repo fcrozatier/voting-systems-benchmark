@@ -1,6 +1,6 @@
 import numpy as np
 
-from .bradley_terry import bradley_terry_scores
+from src.bradley_terry.bradley_terry import bradley_terry_scores
 
 
 def test_bradley_terry_scores():
