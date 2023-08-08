@@ -2,7 +2,7 @@ from math import sqrt
 
 import pytest
 
-from .utilities import *
+from src.utilities import *
 
 
 def test_random_ranking():
