@@ -8,9 +8,13 @@ This repo implements and benchmarks different voting systems for massive competi
 
 ## Benchmarking
 
-To benchmark and compare the voting systems we start by generating a random ranking on N entries, their "true" ranking.
+The benchmark is done as follow:
 
-The best voting systems correctly infer the true ranking from the aggregation of individual rankings.
+We start by generating a random ranking on the N entries, which would be their 'true' ranking.
+
+The best voting systems should correctly infer the true ranking from the aggregation of individual rankings.
+
+To measure how good a voting system is, we measure how close the inferred ranking is to the true ranking when varying a few parameters like the total number of votes (budget) and the noise on votes - the probability that an individual vote on a pair matches their true order.
 
 
 ## References
