@@ -143,9 +143,9 @@ def make_ranking(L: list):
 
 def kendall_tau(list_a, list_b):
     """
-    Use Scipy implementation to compute kendall tau between two lists.
+    Uses Scipy implementation to compute kendall tau between two lists.
 
-    Need to transform permutations into rankings first
+    Needs to transform permutations into rankings first
     """
     return (1 - kendalltau(make_ranking(list_a), make_ranking(list_b)).statistic) / 2
 
@@ -206,7 +206,7 @@ def page_rank(G: nx.DiGraph):
 
 def ranking_from_scores(array):
     """
-    Returns a ranking in increasing order from a list of scores
+    Returns a ranking in increasing order (best entries at the end) from a list of scores
     """
     sorted_array = sorted(list(enumerate(array)), key=lambda e: e[1])
 
