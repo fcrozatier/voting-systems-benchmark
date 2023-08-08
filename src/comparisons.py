@@ -3,6 +3,8 @@ from random import sample
 import networkx as nx
 import numpy as np
 
+from src.utilities import random_cycle
+
 
 class Comparisons:
     def __init__(self, N) -> None:
@@ -30,3 +32,11 @@ class RandomComparisons(Comparisons):
 
     def next_comparison(self):
         return tuple(sample(range(self.N), 2))
+
+
+class RandomExpanderComparisons(Comparisons):
+    def __init__(self, N) -> None:
+        super().__init__(N)
+
+    def next_comparison(self):
+        pass
