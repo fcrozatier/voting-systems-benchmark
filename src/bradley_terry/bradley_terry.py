@@ -1,6 +1,6 @@
 import numpy as np
 
-from scripts.utilities import *
+from src.utilities import *
 
 
 def bradley_terry_scores(M: np.ndarray[int], iterations=20, scores=[]):

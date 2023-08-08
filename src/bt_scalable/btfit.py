@@ -1,7 +1,7 @@
 import networkx as nx
 import numpy as np
 
-from scripts.bt_scalable.btdata import BtData
+from src.bt_scalable.btdata import BtData
 
 
 class BtFit:

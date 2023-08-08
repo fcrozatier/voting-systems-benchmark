@@ -5,7 +5,7 @@ from random import randint
 import networkx as nx
 import numpy as np
 
-from scripts.classes import Benchmark
+from src.classes import Benchmark
 
 
 # The inverse strategy
@@ -23,6 +23,7 @@ def inverseLog(N, k, i):
 
 
 memo = {}
+
 
 # The random strategy
 def rand(N, k, i):
@@ -78,7 +79,6 @@ def rand2(N, k, i):
 
 
 if __name__ == "__main__":
-
     Benchmark(
         lambda N, k, i: rand2(N, k, i),
         lambda N, k, i: rand(N, k, i),
