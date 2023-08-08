@@ -92,7 +92,7 @@ def random_expander_edges(k, N):
     k = number of random cycles
     N = size of cycles
 
-    Edges to create a random regular expander graph from k random N-cycles sharing no edge. The resulting graph is 2k-regular of degree N.
+    Edges to create a random regular expander graph from k random N-cycles sharing no edges. The resulting graph is 2k-regular of degree N.
 
     Returns the list of edges
     """
