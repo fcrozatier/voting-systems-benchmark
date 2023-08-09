@@ -3,7 +3,7 @@ from random import sample
 import networkx as nx
 import numpy as np
 
-from src.utilities import random_cycle
+from src.utilities import *
 
 
 class Comparisons:
@@ -34,9 +34,19 @@ class RandomComparisons(Comparisons):
         return tuple(sample(range(self.N), 2))
 
 
-class RandomExpanderComparisons(Comparisons):
+class RandomCyclesComparisons(Comparisons):
     def __init__(self, N) -> None:
         super().__init__(N)
+        self._edges = None
 
     def next_comparison(self):
-        pass
+        if not self._edges:
+            cycle = random_cycle(self.N)
+            edges = cycle_edges(cycle)
+            self._edges = edges.__iter__()
+
+        try:
+            return self._edges.__next__()
+        except StopIteration:
+            self._edges = None
+            return self.next_comparison()
