@@ -5,7 +5,7 @@ from random import randint
 import networkx as nx
 import numpy as np
 
-from src.classes import Benchmark
+from src.archive.classes import Benchmark
 
 
 # The inverse strategy
