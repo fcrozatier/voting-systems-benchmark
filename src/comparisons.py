@@ -55,17 +55,17 @@ class RandomCyclesComparisons(Comparisons):
 class ConnectedComponentsComparisons(Comparisons):
     def __init__(self, N) -> None:
         super().__init__(N)
-        self._components = None
+        self._components = []
         self._cycle = []
-        self._last_node_component_index = None
+        self._last_node_component_index = 0
 
     def next_comparison(self):
         if len(self._cycle) == 0:
-            # Strongly connected components, ordered in decreasing sizes
+            # Strongly connected components, ordered in decreasing sizes, items shuffled
             self._components = [list(c) for c in nx.strongly_connected_components(self.graph)]
             self._components = sorted(self._components, key=lambda comp: len(comp), reverse=True)
+            [shuffle(comp) for comp in self._components]
 
-            shuffle(self._components[0])
             self._cycle.append(self._components[0].pop())
             self._last_node_component_index = 0
 
@@ -76,7 +76,6 @@ class ConnectedComponentsComparisons(Comparisons):
 
         # If there is only one component
         if len(self._components) == 1:
-            shuffle(self._components[0])
             self._cycle.append(self._components[0].pop())
 
             return tuple(self._cycle[-2:])
@@ -86,9 +85,10 @@ class ConnectedComponentsComparisons(Comparisons):
             if i == self._last_node_component_index or len(comp) == 0:
                 continue
 
-            shuffle(comp)
             self._last_node_component_index = i
             self._cycle.append(comp.pop())
-            break
+            return tuple(self._cycle[-2:])
 
+        # If we couldn't find any non empty component not containing the last node
+        self._cycle.append(self._components[self._last_node_component_index].pop())
         return tuple(self._cycle[-2:])
