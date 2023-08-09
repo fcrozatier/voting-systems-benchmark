@@ -14,12 +14,11 @@ We start by generating a random ranking on the N entries, which would be their '
 
 The best voting systems should correctly infer the true ranking from the aggregation of individual rankings.
 
-To measure how good a voting system is, we measure how close the inferred ranking is to the true ranking when varying a few parameters like the total number of votes (budget) and the noise on votes - the probability that an individual vote on a pair matches their true order.
 
 
 ## References
 
--
+- David R. Hunter. "MM algorithms for generalized Bradley-Terry models." Ann. Statist. 32 (1) 384 - 406, February 2004. https://doi.org/10.1214/aos/1079120141
 
 
 ## License
