@@ -154,7 +154,7 @@ def top_10(ranking_a, ranking_b):
     """
     A pseudo-metric to check whether two rankings (increasing order) have a similar top 10%
 
-    It is symmetric and transitive but not reflexive
+    It is symmetric and transitive but not separate
     """
     assert set(ranking_a) == set(ranking_b), "Lists must have the same elements"
 
