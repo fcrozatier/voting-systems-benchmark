@@ -15,6 +15,8 @@ class Vote:
         self.p = p
         self.true_ranking = random_cycle(comparisons.N)
 
+        self.start_vote()
+
     def start_vote(self) -> Self:
         while self.budget:
             n = self.rematch
