@@ -19,7 +19,8 @@ We measure how close the inferred ranking is to the true ranking when varying th
 
 ## References
 
-- David R. Hunter. "MM algorithms for generalized Bradley-Terry models." Ann. Statist. 32 (1) 384 - 406, February 2004. https://doi.org/10.1214/aos/1079120141
+- David R. Hunter. *"MM algorithms for generalized Bradley-Terry models."* Ann. Statist. 32 (1) 384 - 406, February 2004. https://doi.org/10.1214/aos/1079120141
+- Chen, Xi and Bennett, Paul N. and Collins-Thompson, Kevyn and Horvitz, Eric. *"Pairwise Ranking Aggregation in a Crowdsourced Setting."* WSDM '13: Proceedings of the sixth ACM international conference on Web search and data miningFebruary 2013Pages 193–202 https://doi.org/10.1145/2433396.2433420
 
 
 ## License
