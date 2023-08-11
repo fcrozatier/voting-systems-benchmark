@@ -3,12 +3,12 @@ from typing import Self
 import networkx as nx
 import numpy as np
 
-from src.comparisons import *
+from src.pairings import *
 from src.utilities import *
 
 
 class Vote:
-    def __init__(self, comparisons: Comparisons, budget: int, rematch=1, p=1) -> None:
+    def __init__(self, comparisons: Pairings, budget: int, rematch=1, p=1) -> None:
         self.comparisons = comparisons
         self.budget = budget
         self.rematch = rematch
