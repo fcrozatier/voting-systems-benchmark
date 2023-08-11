@@ -1,5 +1,5 @@
 from itertools import zip_longest
-from random import sample, shuffle
+from random import choice, sample, shuffle
 
 import networkx as nx
 import numpy as np
@@ -7,7 +7,7 @@ import numpy as np
 from src.utilities import *
 
 
-class Comparisons:
+class Pairings:
     def __init__(self, N) -> None:
         self.N = N
         self.graph = nx.DiGraph()
@@ -27,7 +27,7 @@ class Comparisons:
             self.graph.add_edge(winner, loser, weight=1)
 
 
-class RandomComparisons(Comparisons):
+class Random(Pairings):
     def __init__(self, N) -> None:
         super().__init__(N)
 
@@ -35,7 +35,7 @@ class RandomComparisons(Comparisons):
         return tuple(sample(range(self.N), 2))
 
 
-class RandomCyclesComparisons(Comparisons):
+class RandomCycles(Pairings):
     def __init__(self, N) -> None:
         super().__init__(N)
         self._edges = None
@@ -53,7 +53,12 @@ class RandomCyclesComparisons(Comparisons):
             return self.next_comparison()
 
 
-class ConnectedComponentsComparisons(Comparisons):
+class CCBiggest(Pairings):
+    """
+    This pairing relies on the computation of the strongly connected components.
+    The biggest components are stitched together
+    """
+
     def __init__(self, N) -> None:
         super().__init__(N)
         self._components = []
@@ -97,7 +102,12 @@ class ConnectedComponentsComparisons(Comparisons):
         return tuple(self._cycle[-2:])
 
 
-class CCZip(Comparisons):
+class CCZip(Pairings):
+    """
+    This pairing relies on the computation of the strongly connected components
+    They are zipped together
+    """
+
     def __init__(self, N) -> None:
         super().__init__(N)
         self._components = []
@@ -129,7 +139,44 @@ class CCZip(Comparisons):
             return self.next_comparison()
 
 
-class CCSlow(Comparisons):
+class Reachability(Pairings):
+    """
+    This pairing increases the reachability of nodes
+    """
+
+    def __init__(self, N) -> None:
+        super().__init__(N)
+        self._components = []
+        self._edges = None
+
+    def next_comparison(self):
+        if self._edges == None:
+            # breakpoint()
+            cycle = []
+            connectivity = nx.all_pairs_node_connectivity(self.graph)
+
+            current_node = choice(range(self.N))
+            cycle.append(current_node)
+            while len(cycle) < self.N:
+                node_connectivity = connectivity[current_node]
+                # Find the node with smallest connectivity from current_node
+                current_node = min(set(list(node_connectivity)) - set(cycle), key=lambda x: node_connectivity[x])
+                cycle.append(current_node)
+
+            self._edges = cycle_edges(cycle).__iter__()
+
+        try:
+            return self._edges.__next__()
+        except StopIteration:
+            self._edges = None
+            return self.next_comparison()
+
+
+class CCSlow(Pairings):
+    """
+    The weakly connected components are computed at each iteration
+    """
+
     def __init__(self, N) -> None:
         super().__init__(N)
         self._components = []
