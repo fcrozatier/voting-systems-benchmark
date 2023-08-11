@@ -198,7 +198,7 @@ def page_rank(G: nx.DiGraph):
 
     # Compute PageRank
     pr = nx.pagerank(G)
-    # Sort entries with decreasing score
+    # Sort entries with increasing scores
     sorted_entries = sorted(list(pr.items()), key=lambda e: e[1])
     # Return the sorted entries numbers
     return list(map(lambda x: x[0], sorted_entries))
