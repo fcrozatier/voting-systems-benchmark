@@ -153,14 +153,17 @@ class Reachability(Pairings):
         if self._edges == None:
             # breakpoint()
             cycle = []
-            connectivity = nx.all_pairs_node_connectivity(self.graph)
 
             current_node = choice(range(self.N))
             cycle.append(current_node)
             while len(cycle) < self.N:
-                node_connectivity = connectivity[current_node]
-                # Find the node with smallest connectivity from current_node
-                current_node = min(set(list(node_connectivity)) - set(cycle), key=lambda x: node_connectivity[x])
+                # Compute connectivity from current_node to nodes not in cycle
+                node_connectivity = [
+                    (i, nx.algorithms.approximation.node_connectivity(self.graph, current_node, i))
+                    for i in set(range(self.N)) - set(cycle)
+                ]
+                # Find the unvisited node with smallest connectivity from current_node
+                current_node = min(node_connectivity, key=lambda x: x[1])[0]
                 cycle.append(current_node)
 
             self._edges = cycle_edges(cycle).__iter__()
