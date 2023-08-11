@@ -19,9 +19,13 @@ We measure how close the inferred ranking is to the true ranking when varying th
 
 ## References
 
-- David R. Hunter. *"MM algorithms for generalized Bradley-Terry models."* Ann. Statist. 32 (1) 384 - 406, February 2004. https://doi.org/10.1214/aos/1079120141
-- Chen, Xi and Bennett, Paul N. and Collins-Thompson, Kevyn and Horvitz, Eric. *"Pairwise Ranking Aggregation in a Crowdsourced Setting."* WSDM '13: Proceedings of the sixth ACM international conference on Web search and data miningFebruary 2013Pages 193–202 https://doi.org/10.1145/2433396.2433420
-- Joel Friedman. *"A proof of Alon's second eigenvalue conjecture and related problems"* Memoirs of the American Mathematical Society, May 2004. https://arxiv.org/abs/cs/0405020
+Bradley Terry Model:
+- David R. Hunter (2004). *"MM algorithms for generalized Bradley-Terry models."* Ann. Statist. 32 (1) 384 - 406. https://doi.org/10.1214/aos/1079120141
+- Chen, Xi and Bennett, Paul N. and Collins-Thompson, Kevyn and Horvitz, Eric (2013). *"Pairwise Ranking Aggregation in a Crowdsourced Setting."* WSDM '13: Proceedings of the sixth ACM international conference on Web search and data mining. Pages 193–202.  https://doi.org/10.1145/2433396.2433420
+
+Graph theory:
+- Joel Friedman (2004). *"A proof of Alon's second eigenvalue conjecture and related problems"* Memoirs of the American Mathematical Society. https://arxiv.org/abs/cs/0405020
+- Roy, Bernard (1959). "Transitivité et connexité". C. R. Acad. Sci. Paris (in French). 249: 216–218. https://gallica.bnf.fr/ark:/12148/bpt6k3201c/f222.item
 
 
 ## License
