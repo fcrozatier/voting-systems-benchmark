@@ -4,6 +4,19 @@ from src.utilities import *
 from src.votes import *
 
 
+def page_rank(G: nx.DiGraph):
+    """
+    Returns the ranked list of vertices of G in increasing order, according to page rank
+    """
+
+    # Compute PageRank
+    pr = nx.pagerank(G)
+    # Sort entries with increasing scores
+    sorted_entries = sorted(list(pr.items()), key=lambda e: e[1], reverse=True)
+    # Return the sorted entries numbers
+    return list(map(lambda x: x[0], sorted_entries))
+
+
 def initialize_graph(N: int):
     G = nx.DiGraph()
     G.add_nodes_from(list(range(N)))

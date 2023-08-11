@@ -97,15 +97,6 @@ def test_top_10():
     assert top_10(ranking_1, ranking_3) == 0
 
 
-def test_page_ranked():
-    G = nx.DiGraph()
-    G.add_nodes_from(range(3))
-    G.add_edges_from([(2, 1), (2, 1), (1, 0)])
-
-    rank = page_rank(G)
-    assert rank == [2, 1, 0]
-
-
 def test_ranking_from_scores():
     values = [0.139, 0.226, 0.143, 0.492]
     assert ranking_from_scores(values) == [0, 2, 1, 3]

@@ -191,19 +191,6 @@ def vote(pair: tuple, ranking: list, p=1):
             return (a, b)
 
 
-def page_rank(G: nx.DiGraph):
-    """
-    Returns the ranked list of vertices of G in increasing order, according to page rank
-    """
-
-    # Compute PageRank
-    pr = nx.pagerank(G)
-    # Sort entries with increasing scores
-    sorted_entries = sorted(list(pr.items()), key=lambda e: e[1])
-    # Return the sorted entries numbers
-    return list(map(lambda x: x[0], sorted_entries))
-
-
 def ranking_from_scores(array):
     """
     Returns a ranking in increasing order (best entries at the end) from a list of scores
