@@ -1,8 +1,8 @@
-# Massive Voting Systems
+# Voting Systems for Massive Competitions
 
-Voting systems for massive competitions
+The problem you have: choosing a voting system for an event like a massive competition.
 
-## Description
+There are plenty of them, but most of them were not designed to deal with sparse data.
 
 This repo implements and benchmarks different voting systems for massive competitions and tries to answer the natural question: is there a better approach?
 
@@ -25,7 +25,7 @@ Bradley Terry Model:
 
 Graph theory:
 - Joel Friedman (2004). *"A proof of Alon's second eigenvalue conjecture and related problems"* Memoirs of the American Mathematical Society. https://arxiv.org/abs/cs/0405020
-- Roy, Bernard (1959). "Transitivité et connexité". C. R. Acad. Sci. Paris (in French). 249: 216–218. https://gallica.bnf.fr/ark:/12148/bpt6k3201c/f222.item
+
 
 
 ## License
