@@ -1,15 +1,17 @@
-from crowd_bt import bt
 from numpy.random import choice, random, shuffle
 
+from src.crowd_bt import bt
+from src.crowd_bt.models import Annotator, Item
 
-def maybe_init_annotator(annotator, items):
+
+def maybe_init_annotator(annotator: Annotator, items):
     if annotator.next is None and annotator.prev is None:
         prev, next = choice(items, 2)
         annotator.prev = prev
         annotator.next = next
 
 
-def choose_next(annotator, items):
+def choose_next(annotator: Annotator, items: list[Item]):
     shuffle(items)  # useful for argmax case as well in the case of ties
 
     if random() < bt.EPSILON:
@@ -23,7 +25,7 @@ def choose_next(annotator, items):
         )
 
 
-def perform_vote(annotator, next_won):
+def perform_vote(annotator: Annotator, next_won: bool):
     if next_won:
         winner = annotator.next
         loser = annotator.prev

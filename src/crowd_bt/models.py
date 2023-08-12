@@ -1,12 +1,12 @@
-from crowd_bt import bt
+from src.crowd_bt import bt
 
 
 class Annotator:
     def __init__(self) -> None:
         self.alpha = bt.ALPHA_PRIOR
         self.beta = bt.BETA_PRIOR
-        self.prev = None
-        self.next = None
+        self.prev: Item = None
+        self.next: Item = None
 
     def update_next(self, new_next):
         self.prev = self.next
