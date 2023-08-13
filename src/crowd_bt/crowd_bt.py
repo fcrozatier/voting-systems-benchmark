@@ -1,8 +1,15 @@
 # https://github.com/anishathalye/gavel/blob/master/gavel/crowd_bt.py
 
+from typing import Self
 
 from numpy import exp, log
 from scipy.special import betaln, psi
+
+from src.crowd_bt.judge import *
+from src.crowd_bt.models import Annotator, Item
+from src.pairings import Pairings
+from src.utilities import *
+from src.votes import Vote
 
 # See this paper for more information:
 # http://people.stern.nyu.edu/xchen3/images/crowd_pairwise.pdf
@@ -122,3 +129,38 @@ def update_annotator(alpha, beta, mu_winner, sigma_sq_winner, mu_loser, sigma_sq
     updated_beta = (E_heta - E_heta_sq) * (1 - E_heta) / variance
 
     return (updated_alpha, updated_beta, c)
+
+
+class CrowdBTPairings(Pairings):
+    def __init__(self, N) -> None:
+        super().__init__(N)
+
+        self.annotators = [Annotator() for _ in range(N)]
+        self.items = [Item(i) for i in range(N)]
+        self.current_annotator = None
+
+    def next_comparison(self) -> tuple[int, int]:
+        annotator: Annotator = np.random.choice(self.annotators)
+        maybe_init_annotator(annotator, self.items)
+
+        annotator.update_next(choose_next(annotator, self.items))
+        prev = annotator.prev
+        next = annotator.next
+
+        self.current_annotator = annotator
+
+        return (prev.id, next.id)
+
+
+class CrowdBT(Vote):
+    def single_vote(self, pair: tuple, ranking: list, p: int = 1):
+        comparisons: CrowdBTPairings = self.comparisons
+        loser_id, winner_id = vote(pair, ranking, p)
+        next_wins = winner_id == pair[1]
+        perform_vote(comparisons.current_annotator, next_wins)
+        return loser_id, winner_id
+
+    def rank(self):
+        comparisons: CrowdBTPairings = self.comparisons
+        self.ranking = list(map(lambda i: i.id, sorted(comparisons.items, key=lambda i: i.mu)))
+        return self.ranking
