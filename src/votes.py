@@ -15,12 +15,12 @@ class Vote:
         self.start_vote()
 
     def start_vote(self) -> Self:
-        while self.budget:
-            n = self.rematch
+        while self.budget > 0:
+            (i, j) = self.comparisons.next_comparison()
 
+            n = self.rematch
             while n > 0:
-                (i, j) = self.comparisons.next_comparison()
-                (loser, winner) = vote((i, j), self.true_ranking, self.p)
+                (loser, winner) = self.single_vote((i, j), self.true_ranking, self.p)
                 self.comparisons.record_vote(winner, loser)
                 self.budget -= 1
                 n -= 1
@@ -31,6 +31,9 @@ class Vote:
                 continue
             break
         return self
+
+    def single_vote(self, pair: tuple, ranking: list, p: int = 1):
+        return vote(pair, ranking, p)
 
     def rank(self) -> list[int]:
         pass
