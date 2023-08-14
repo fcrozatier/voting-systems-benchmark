@@ -1,22 +1,23 @@
-from typing import Self
+from typing import Self, Type
 
 from src.pairings import *
 from src.utilities import *
 
 
 class Vote:
-    def __init__(self, comparisons: Pairings, budget: int, rematch=1, p=1) -> None:
-        self.comparisons = comparisons
+    def __init__(self, N=500, budget=1000, comparisons_cls: Type[Pairings] = Random, rematch=1, p=1) -> None:
+        self.N = N
+        self.comparisons = comparisons_cls(N)
         self.budget = budget
         self.rematch = rematch
         self.p = p
-        self.true_ranking = random_cycle(comparisons.N)
+        self.true_ranking = random_cycle(N)
 
         self.start_vote()
 
     def start_vote(self) -> Self:
         while self.budget > 0:
-            (i, j) = self.comparisons.next_comparison()
+            (i, j) = self.next_comparison()
 
             n = self.rematch
             while n > 0:
@@ -32,10 +33,16 @@ class Vote:
             break
         return self
 
+    def next_comparison(self):
+        # Subclasses can hook into this function
+        return self.comparisons.next_comparison()
+
     def single_vote(self, pair: tuple, ranking: list, p: int = 1):
+        # Subclasses can hook into this function
         return vote(pair, ranking, p)
 
     def rank(self) -> list[int]:
+        # Subclasses must implement this function
         pass
 
     def score(self):

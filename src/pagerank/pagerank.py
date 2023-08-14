@@ -1,5 +1,8 @@
+from typing import Type
+
 import networkx as nx
 
+from src.pairings import Pairings, Random
 from src.utilities import *
 from src.votes import *
 
@@ -64,3 +67,21 @@ def iteratedPageRank(ranking: list[int], vote_budget: int, reassess=1, p=0.9):
 class PageRank(Vote):
     def rank(self):
         return page_rank(self.comparisons.graph)
+
+
+class IteratedPageRank(PageRank):
+    def next_comparison(self):
+        if not hasattr(self, "_edges"):
+            new_cycle = random_cycle(self.N)
+        elif self._edges == None:
+            new_cycle = page_rank(self.comparisons.graph)
+
+        if "new_cycle" in locals():
+            edges = cycle_edges(new_cycle)
+            self._edges = edges.__iter__()
+
+        try:
+            return self._edges.__next__()
+        except StopIteration:
+            self._edges = None
+            return self.next_comparison()
