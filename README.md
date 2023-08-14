@@ -1,12 +1,18 @@
 # Voting Systems for Massive Competitions
 
-The problem you have: choosing a voting system for an event like a massive competition.
+The problem: choosing a voting system for an event like a massive competition.
 
 There are plenty of them, but most of them were not designed to deal with sparse data.
 
 This repo implements and benchmarks different voting systems for massive competitions and tries to answer the natural question: is there a better approach?
 
-## Benchmarking
+## Implemented voting systems
+
+- Bradley-Terry
+- Crowd BT
+- PageRank
+
+## Benchmark
 
 The benchmark is done as follow:
 
@@ -19,11 +25,11 @@ We measure how close the inferred ranking is to the true ranking when varying th
 
 ## References
 
-Bradley Terry Model:
+Bradley Terry based models:
 - David R. Hunter (2004). *"MM algorithms for generalized Bradley-Terry models."* Ann. Statist. 32 (1) 384 - 406. https://doi.org/10.1214/aos/1079120141
 - Chen, Xi and Bennett, Paul N. and Collins-Thompson, Kevyn and Horvitz, Eric (2013). *"Pairwise Ranking Aggregation in a Crowdsourced Setting."* WSDM '13: Proceedings of the sixth ACM international conference on Web search and data mining. Pages 193–202.  https://doi.org/10.1145/2433396.2433420
 
-Graph theory:
+Expander graphs:
 - Joel Friedman (2004). *"A proof of Alon's second eigenvalue conjecture and related problems"* Memoirs of the American Mathematical Society. https://arxiv.org/abs/cs/0405020
 
 
