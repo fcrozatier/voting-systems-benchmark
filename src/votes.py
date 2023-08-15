@@ -45,5 +45,5 @@ class Vote:
         # Subclasses must implement this function
         pass
 
-    def score(self):
-        return top_10(self.true_ranking, self.rank())
+    def score(self, func=top_10):
+        return func(self.true_ranking, self.rank())
