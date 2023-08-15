@@ -41,52 +41,6 @@ def sort_tuples(tuples: list[tuple]):
     return list(map(lambda x: tuple(sorted(x)), tuples))
 
 
-def independent_cycle(edges, edge_list):
-    """
-    Returns a new cycle that is independent from edge_list
-    """
-    sorted_edges = set(sort_tuples(edges))
-    sorted_edge_list = set(sort_tuples(edge_list))
-
-    redundant_edges = list(sorted_edges.intersection(sorted_edge_list))
-    redundant_nodes = list(chain.from_iterable(redundant_edges))
-
-    def permute(nodes_list, times=100, force=False):
-        for _ in range(times):
-            permuted_edges = sort_tuples(pairwise(np.random.permutation(nodes_list)))
-
-            intersection_size = len(set(permuted_edges).intersection(redundant_edges))
-            if intersection_size == 0 or force:
-                return permuted_edges
-
-        return None
-
-    # try to permute all the redundant nodes a few times
-    permuted_edges = permute(redundant_nodes)
-    if permuted_edges:
-        return list((sorted_edges.difference(redundant_edges)).union(permuted_edges))
-
-    # try to find new independent pairs from redundant ones
-    new_edges = []
-    for i in range(len(redundant_edges)):
-        edge = tuple(sorted(sample(redundant_nodes, 2)))
-
-        if len(set(edges)) == 2 and edge not in redundant_edges:
-            a, b = edge
-            new_edges.append(tuple(sorted(edge)))
-            redundant_nodes.remove(a)
-            redundant_nodes.remove(b)
-
-    # try again to permute the remaining edges
-    permuted_edges = permute(redundant_nodes)
-    if permuted_edges:
-        return list((sorted_edges.difference(redundant_edges)).union(permuted_edges, new_edges))
-
-    # otherwise no luck
-    permuted_edges = permute(redundant_nodes, times=1, force=True)
-    return list((sorted_edges.difference(redundant_edges)).union(permuted_edges, new_edges))
-
-
 def random_expander_edges(k, N):
     """
     k = number of random cycles
@@ -129,12 +83,12 @@ def kendall_tau_naive(list_a: list, list_b: list) -> int:
 
     Naive O(n^2) implementation
     """
-    tau = 0
+    inversions = 0
     for i, j in combinations(list_a, 2):
-        tau += np.sign(list_a.index(i) - list_a.index(j)) == -np.sign(list_b.index(i) - list_b.index(j))
+        inversions += np.sign(list_a.index(i) - list_a.index(j)) == -np.sign(list_b.index(i) - list_b.index(j))
 
     n = len(list_a)
-    return 2 * tau / (n * (n - 1))
+    return inversions / ((n * (n - 1)) / 2)
 
 
 def make_ranking(L: list):
@@ -147,7 +101,8 @@ def kendall_tau(list_a, list_b):
 
     Needs to transform permutations into rankings first
     """
-    return (1 - kendalltau(make_ranking(list_a), make_ranking(list_b)).statistic) / 2
+    kt, _ = kendalltau(make_ranking(list_a), make_ranking(list_b))
+    return (1 - kt) / 2
 
 
 def top_10(ranking_a, ranking_b):
