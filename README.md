@@ -11,6 +11,7 @@ This repo implements and benchmarks different voting systems for massive competi
 - Bradley-Terry
 - Crowd BT
 - PageRank
+- Schulze
 
 ## Benchmark
 

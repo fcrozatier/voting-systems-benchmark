@@ -1,5 +1,7 @@
 import numpy as np
 
+from src.votes import Vote
+
 
 def strongest_paths(M):
     """
@@ -50,3 +52,9 @@ def schulze_ranking(S):
         i += 1
 
     return ranking
+
+
+class Schulze(Vote):
+    def rank(self) -> list[int]:
+        S = strongest_paths(self.comparisons.matrix)
+        return schulze_ranking(S)
