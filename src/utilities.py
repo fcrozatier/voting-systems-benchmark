@@ -1,4 +1,4 @@
-from itertools import chain, combinations, pairwise
+from itertools import combinations, pairwise
 from random import random, sample
 
 import networkx as nx
@@ -119,6 +119,28 @@ def top_10(ranking_a, ranking_b):
     set_b = set(ranking_b[-l:])
 
     return 1 - len(set_a.intersection(set_b)) / l
+
+
+def weighted_distance(original, permutation):
+    """
+    Measures how far appart a list an a permutation are. The distance is weighted with weights increasing with index
+    """
+    from math import e, exp, sqrt
+
+    N = len(original)
+    ranking_original = make_ranking(original)
+    ranking_other = make_ranking(permutation)
+
+    # Normalize the sum of weights to N
+    normalize = N / ((1 - e ** (-N)) / (1 - e**-1))
+    weights = [normalize * exp(-(N - 1 - i)) for i in range(N)]
+    sq_distance = 0
+
+    data = zip(ranking_original, ranking_other, weights)
+    for rank_original, rank_other, weight in data:
+        sq_distance += ((rank_original - rank_other) ** 2) * weight
+
+    return sqrt(sq_distance)
 
 
 def random_ranking(n: int) -> list[int]:
