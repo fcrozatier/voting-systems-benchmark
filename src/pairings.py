@@ -151,7 +151,6 @@ class Reachability(Pairings):
 
     def next_comparison(self):
         if self._edges == None:
-            # breakpoint()
             cycle = []
 
             current_node = choice(range(self.N))
@@ -177,7 +176,7 @@ class Reachability(Pairings):
 
 class CCSlow(Pairings):
     """
-    The weakly connected components are computed at each iteration
+    The strongly connected components are computed at each iteration
     """
 
     def __init__(self, N) -> None:
