@@ -176,7 +176,9 @@ class Reachability(Pairings):
 
 class CCSlow(Pairings):
     """
-    The strongly connected components are computed at each iteration
+    This pairing optimizes the next comparison to get a strongly connected graph
+
+    The resulting graph won't be regular
     """
 
     def __init__(self, N) -> None:
@@ -185,6 +187,7 @@ class CCSlow(Pairings):
         self._cycle = []
         self._last_node_component_index = 0
         self._nb_components_memo = []
+        self.delegate = RandomCycles(self.N)
 
     def next_comparison(self):
         # Strongly connected components, ordered in decreasing sizes, items shuffled
@@ -203,24 +206,19 @@ class CCSlow(Pairings):
             self._cycle = []
             return comparison
 
-        # If there is only one component
+        # If there is only one component, make random cycles
         if len(self._components) == 1:
-            next_node = list(set(self._components[0]) - set(self._cycle)).pop()
-            self._cycle.append(next_node)
+            return self.delegate.next_comparison()
 
-            return tuple(self._cycle[-2:])
-
-        # Pick a random node in the biggest component containing new nodes for the current cycle and not the last node
+        # Pick a random node in a component not containing the last node
         for i, comp in enumerate(self._components):
-            if i == self._last_node_component_index or len(set(comp) - set(self._cycle)) == 0:
-                continue
-
-            next_node = list(set(self._components[i]) - set(self._cycle)).pop()
-            self._cycle.append(next_node)
-            self._last_node_component_index = i
-            return tuple(self._cycle[-2:])
+            if i != self._last_node_component_index and len(comp) != 0:
+                next_node = self._components[i].pop()
+                self._cycle.append(next_node)
+                self._last_node_component_index = i
+                return tuple(self._cycle[-2:])
 
         # If we couldn't find a node in a component not containing the last node
-        next_node = list(set(self._components[self._last_node_component_index]) - set(self._cycle)).pop()
+        next_node = self._components[self._last_node_component_index].pop()
         self._cycle.append(next_node)
         return tuple(self._cycle[-2:])
