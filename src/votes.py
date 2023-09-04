@@ -11,7 +11,7 @@ class Vote:
         self.budget = budget
         self.rematch = rematch
         self.p = p
-        self.true_ranking = random_cycle(N)
+        self.true_ranking = random_list(N)
 
         self.start_vote()
 

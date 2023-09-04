@@ -6,7 +6,7 @@ import numpy as np
 from scipy.stats import kendalltau
 
 
-def random_cycle(size):
+def random_list(size):
     """
     Returns a random cycle of given size using Durstenfeld algorithm
     https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
@@ -64,7 +64,7 @@ def random_expander_edges(k, N):
 
     for i in range(k):
         while len(edges) != (i + 1) * N:
-            cycle = random_cycle(N)
+            cycle = random_list(N)
 
             cycle_edges = cycle_edges(cycle)
             cycle_edges_sorted = list(map(sort_tuples, cycle_edges))

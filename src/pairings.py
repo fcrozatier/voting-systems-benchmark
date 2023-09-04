@@ -42,7 +42,7 @@ class RandomCycles(Pairings):
 
     def next_comparison(self):
         if not self._edges:
-            cycle = random_cycle(self.N)
+            cycle = random_list(self.N)
             edges = cycle_edges(cycle)
             self._edges = edges.__iter__()
 

@@ -31,7 +31,7 @@ def test_random_cycle(N):
         return n * factorial(n - 1)
 
     while count < iterations:
-        cycle = tuple(random_cycle(N))
+        cycle = tuple(random_list(N))
 
         if cycle in cycles:
             cycles[cycle] += 1
@@ -57,7 +57,7 @@ def test_random_cycle(N):
 
 @pytest.mark.parametrize("N", [2, 3, 4])
 def test_cycle_edges(N):
-    cycle = random_cycle(N)
+    cycle = random_list(N)
     edges = cycle_edges(cycle)
 
     assert len(edges) == N

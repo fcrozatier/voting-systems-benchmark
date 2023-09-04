@@ -40,7 +40,7 @@ def iteratedPageRank(ranking: list[int], vote_budget: int, reassess=1, p=0.9):
     while remaining_votes > 0:
         if remaining_votes == vote_budget:
             # initial loop: vote on the edges of a random cycle
-            cycle = random_cycle(N)
+            cycle = random_list(N)
         else:
             # iteration: make a new independent cycle from the page rank on G
             cycle = page_rank(G)
@@ -72,7 +72,7 @@ class PageRank(Vote):
 class IteratedPageRank(PageRank):
     def next_comparison(self):
         if not hasattr(self, "_edges"):
-            new_cycle = random_cycle(self.N)
+            new_cycle = random_list(self.N)
         elif self._edges == None:
             new_cycle = page_rank(self.comparisons.graph)
 
