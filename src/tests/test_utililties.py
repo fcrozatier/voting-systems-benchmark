@@ -100,3 +100,9 @@ def test_top_10():
 def test_ranking_from_scores():
     values = [0.139, 0.226, 0.143, 0.492]
     assert ranking_from_scores(values) == [0, 2, 1, 3]
+
+
+def test_clip():
+    assert clip(3, 2, 5) == 3
+    assert clip(6, 2, 5) == 5
+    assert clip(1, 2, 5) == 2
