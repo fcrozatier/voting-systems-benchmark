@@ -7,10 +7,11 @@ from src.utilities import clip, random_list_from_gaussian_scores, top_10
 
 
 class MajorityJudgement:
-    def __init__(self, N, budget) -> None:
+    def __init__(self, N, budget, spread=1) -> None:
         self.N = N
         self.budget = budget
-        self.ranked_entries = random_list_from_gaussian_scores(N)
+        self.ranked_entries = random_list_from_gaussian_scores(N, m=5, s=2)
+        self.spread = spread
 
         self.start_vote()
 
@@ -27,19 +28,15 @@ class MajorityJudgement:
         return self
 
     def single_vote(self, item: dict):
-        note = clip(np.random.normal(item["score"], 2), minimum=0, maximum=10)
+        score = clip(np.random.normal(item["score"], self.spread), minimum=0, maximum=10)
 
         if "votes" not in item:
             item["votes"] = []
 
-        item["votes"].append(note)
+        item["votes"].append(score)
 
     def rank(self) -> list[int]:
-        for item in self.ranked_entries:
-            item["final"] = np.median(item["votes"])
-
-        self.ranked = sorted(self.ranked_entries, key=lambda x: x["final"], reverse=True)
-        return self.ranked
+        return sorted(self.ranked_entries, key=lambda x: np.median(x["votes"]))
 
     def score(self):
         true_ranking = list(map(lambda x: x["index"], self.ranked_entries))

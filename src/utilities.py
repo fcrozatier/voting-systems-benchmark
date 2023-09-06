@@ -35,7 +35,7 @@ def clip(x, minimum, maximum):
 def random_list_from_gaussian_scores(size, m=5, s=2):
     L = list(range(size))
     L = list(map(lambda x: {"index": x, "score": clip(np.random.normal(m, s), minimum=0, maximum=10)}, L))
-    return sorted(L, key=lambda x: x["score"], reverse=True)
+    return sorted(L, key=lambda x: x["score"])
 
 
 def cycle_edges(cycle: list[int]):
