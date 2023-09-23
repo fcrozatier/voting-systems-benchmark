@@ -1,8 +1,5 @@
-from typing import Type
-
 import networkx as nx
 
-from src.pairings import Pairings, Random
 from src.utilities import *
 from src.votes import *
 
