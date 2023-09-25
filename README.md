@@ -1,8 +1,6 @@
 # Voting Systems for Massive Competitions
 
-The problem: choosing a voting system for an event like a massive competition.
-
-There are plenty of them, but most of them were not designed to deal with sparse data.
+The problem: choosing a voting system for an event like a massive competition, as most voting systems were not designed to deal with sparse data.
 
 This repo implements and benchmarks different voting systems for massive competitions and tries to answer the natural question: is there a better approach?
 
@@ -12,16 +10,15 @@ This repo implements and benchmarks different voting systems for massive competi
 - Crowd BT
 - PageRank
 - Schulze
+- Majority Judgement
 
 ## Benchmark
 
 The benchmark is done as follow:
 
-We start by generating a random ranking on N entries, which would be their 'true' ranking.
+We start by generating a random ranking on N entries, which would be the 'true' ranking.
 
 The best voting systems should correctly infer the true ranking from the aggregation of individual rankings.
-
-We measure how close the inferred ranking is to the true ranking when varying the number of votes and the noise on each vote.
 
 
 ## References
