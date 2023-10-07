@@ -79,6 +79,7 @@ So it would seem that the more accurate voting system is the Iterated PageRank o
 
 ![PageRank vs Majority Judgement benchmark](./assets/PageRank%20vs%20Majority%20Judgement.png)
 
+So the majority judgement is a good algorithm in a massive competition setting as it is both precise and robust and allows us to expect about 90% of accuracy on the top 10%
 
 
 ## References
