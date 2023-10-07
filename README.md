@@ -1,14 +1,21 @@
-# Voting Systems for Massive Competitions
+# Voting Systems Benchmark
 
-The problem: choosing a voting system for an event like a massive competition, as most voting systems were not designed to deal with sparse data.
+The problem: choosing a voting system for an event like a massive competition.
 
-This repo implements and benchmarks different voting systems for massive competitions and tries to answer the natural question: is there a better approach?
+Most voting systems were not designed to deal with sparse data. This repo implements and benchmarks different voting systems for massive competitions and tries to answer the natural question: is there a better approach?
 
 ## Implemented voting systems
 
-- Bradley-Terry
-- Crowd BT
+- Bradley-Terry models: different variants are considered depending on the ways to pair entries.
+  - Random pairing
+  - Grouping entries in random cycles 1-N and pairing adjacent ones, in order to create an underlying undirected expander
+  - Cycling through the strongly connected components, to increase connectivity (CCZip)
+  - Computing the strongly connected components at each pairing and iteratively pairing entries from the biggest two (CCSlow)
+  - Crowd BT
 - PageRank
+  - Random pairings
+  - Random cycle pairings
+  - Iterative PageRank: after each N votes (cycles of pairings) compute the current PageRank and the ordered list is used for the next iteration, comparing adjacent entries
 - Schulze
 - Majority Judgement
 
@@ -19,6 +26,9 @@ The benchmark is done as follow:
 We start by generating a random ranking on N entries, which would be the 'true' ranking.
 
 The best voting systems should correctly infer the true ranking from the aggregation of individual rankings.
+
+## Results
+
 
 
 ## References
