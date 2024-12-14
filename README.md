@@ -6,38 +6,38 @@ Most voting systems were not designed to deal with sparse data. This repo implem
 
 ## Implemented voting systems
 
-- Bradley-Terry models: different variants are considered depending on the ways to pair entries.
+- Bradley-Terry models: different variants are considered depending on the way to pair entries.
   - Random pairing
-  - Grouping entries in random cycles and pairing the adjacent ones, in order to create an underlying undirected expander (Random cycles)
-  - Cycling through the strongly connected components, to increase the directed graph connectivity (CCZip)
-  - Computing the reachability (minimum path) between each entries and pairing the ones further appart (Reachability)
-  - Crowd BT
-- PageRank
+  - Grouping entries in random cycles and pairing the adjacent ones, in order to create an underlying undirected [expander graph](https://en.wikipedia.org/wiki/Expander_graph) (Random cycles)
+  - Cycling through strongly connected components, to increase the directed graph connectivity (CCZip)
+  - Computing the [reachability](https://en.wikipedia.org/wiki/Reachability) of entries and pairing the ones further appart (Reachability)
+  - [Crowd BT](https://pages.stern.nyu.edu/~xchen3/images/crowd_pairwise.pdf)
+- [PageRank](https://en.wikipedia.org/wiki/PageRank)
   - Random pairings
   - Random cycles pairings
-  - Iterative PageRank: after each N votes (cycles of pairings) compute the current PageRank and the ordered list is used for the next iteration, comparing adjacent entries from the list
-- Schulze
-- Majority Judgement
+  - Iterative PageRank: after every N votes (cycles of pairings), the current PageRank is used to determine adjacent entries to compare
+- [Schulze method](https://en.wikipedia.org/wiki/Schulze_method)
+- [Majority Judgement](https://en.wikipedia.org/wiki/Majority_judgment)
 
 ## Benchmark
 ### Methodology
 
-The benchmark is done as follow:
+The benchmark is done as follows:
 
-1. Generate a random ranking on N entries, which would be the 'true' ranking.
-2. Generate votes according to the true ranking with a certain amount of noise. Eg. if A if ranked better than B in the true ranking, then the vote is A>B with 90% chance if we have 10% noise.
-3. Measure how good the resulting ranking is by comparing the true ranking from the computed ranking. The measure used is a comparison of the top 10% measuring how many entries of the computed top 10% were not in the real top 10%. This top10% measure is a pseudo distance and the smaller the number the better.
+1. Generate a random ranking on N entries, representing the 'true' ranking.
+2. Generate votes according to the true ranking and some amount of noise. That is, if A if ranked better than B in the true ranking, then the vote is A>B with 90% chance if we had 10% of noise.
+3. Measure how good the resulting ranking is by comparing the true ranking from the computed ranking. The measure used is a comparison of the top 10% measuring how many entries of the computed top 10% were not in the real top 10%. In other words it's a relative measure of the intersection of the top 10 between the true and computed ranking. The pseudo formula is $1-|\mathrm{Top10(A)}\cap\mathrm{Top10(B)}|/10$. This top10% measure is a [pseudo-distance](https://en.wikipedia.org/wiki/Pseudometric_space) on lists and the smaller the number the better.
 
 The best voting systems should correctly infer the true ranking from the aggregation of individual rankings.
 
 ### Parameters
 
-The parameters used come from the real world scenario example motivating this research: the Summer of Math Exposition competition (SoME3).
+The parameters used come from the real world scenario example motivating this research: the [Summer of Math Exposition](some.3b1b.co) competition (SoME3).
 
 - 500 entries
 - 15 000 votes
 
-We also added 10% noise for the benchmark to take into account errors.
+We also added 10% of noise for the benchmark to take into account errors.
 
 ## Results
 
@@ -49,21 +49,21 @@ As expected the choice of pairing impacts the vote, and it turns out that optimi
 
 ### PageRank variants
 
-It turns out the PageRank algorithm is very sensitive to noise, but iterating helps improve the results
+The PageRank algorithm is very sensitive to noise, but iterating helps improve the results
 
 ![PageRank family benchmark](./assets/PageRank.png)
 
 ### Schulze
 
-The Schulze voting system is one of the better voting systems in classical situations, but unfortunately it doesn't perform so well with sparse data.
+The Schulze voting system is one of the better voting systems in classical situations, but it doesn't perform so well with sparse data.
 
 ![Schulze benchmark](./assets/Schulze.png)
 
 ### Majority Judgement
 
-This one is different as people grade each individual entries.
+This one is different as people grade each individual entries instead of doing pairwise comparisons.
 
-15000 votes on pairs do not correspond to 30000 individual votes because of entries appearing multiple times. So to be conservative a budget of 20000 votes was allocated for this benchmark, which corresponds to 40 votes per entry.
+15000 votes on pairs do not correspond to 30000 individual votes because of entries appearing multiple times. So to be conservative a budget of 20000 votes was considered for this benchmark, which corresponds to 40 votes per entry.
 
 Also from our surveys with 500 people grading the event or the website, for a 1-10 continuous grading scale we observed a typical spread of 1.5
 
@@ -75,11 +75,11 @@ Comparing together the best pairings for each family of algorithms gives the fol
 
 ![Overall benchmark](./assets/Overall.png)
 
-So it would seem that the more accurate voting systems are the Iterated PageRank and the Majority Judgement. However PageRank is really sensitive to noise where the Majority Judgement is much more robust.
+So the more accurate voting systems are the Iterated PageRank and the Majority Judgement. However PageRank is really sensitive to noise where the Majority Judgement is much more robust.
 
 ![PageRank vs Majority Judgement benchmark](./assets/PageRank%20vs%20Majority%20Judgement.png)
 
-So the Majority Judgement is a good algorithm in a massive competition setting as it is both precise and robust and allows us to expect about 85-90% of accuracy on the top 10%
+So the Majority Judgement is a good fit in a massive competition setting as it is both precise and robust and allows us to expect about 85-90% of accuracy on the top 10%
 
 
 ## References
