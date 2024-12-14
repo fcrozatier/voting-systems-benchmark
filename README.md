@@ -6,7 +6,7 @@ Most voting systems were not designed to deal with sparse data. This repo implem
 
 ## Implemented voting systems
 
-- Bradley-Terry models: different variants are considered depending on the way to pair entries.
+- [Bradley-Terry models](https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model): different variants are considered depending on the way to pair entries.
   - Random pairing
   - Grouping entries in random cycles and pairing the adjacent ones, in order to create an underlying undirected [expander graph](https://en.wikipedia.org/wiki/Expander_graph) (Random cycles)
   - Cycling through strongly connected components, to increase the directed graph connectivity (CCZip)
@@ -26,7 +26,7 @@ The benchmark is done as follows:
 
 1. Generate a random ranking on N entries, representing the 'true' ranking.
 2. Generate votes according to the true ranking and some amount of noise. That is, if A if ranked better than B in the true ranking, then the vote is A>B with 90% chance if we had 10% of noise.
-3. Measure how good the resulting ranking is by comparing the true ranking from the computed ranking. The measure used is a comparison of the top 10% measuring how many entries of the computed top 10% were not in the real top 10%. In other words it's a relative measure of the intersection of the top 10 between the true and computed ranking. The pseudo formula is $1-|\mathrm{Top10(A)}\cap\mathrm{Top10(B)}|/10$. This top10% measure is a [pseudo-distance](https://en.wikipedia.org/wiki/Pseudometric_space) on lists and the smaller the number the better.
+3. Measure how good the resulting ranking is by comparing the true ranking from the computed ranking. The measure used is a comparison of the top 10% measuring how many entries of the computed top 10% were not in the real top 10%. In other words it's a relative measure of the intersection of the top 10% between the true and computed ranking. The pseudo formula for lists of size 100 is $1-|\mathrm{Top10(A)}\cap\mathrm{Top10(B)}|/10$. This top10% measure is a [pseudo-distance](https://en.wikipedia.org/wiki/Pseudometric_space) on lists and the smaller the number the better.
 
 The best voting systems should correctly infer the true ranking from the aggregation of individual rankings.
 
