@@ -26,7 +26,8 @@ The benchmark is done as follows:
 
 1. Generate a random ranking on N entries, representing the 'true' ranking.
 2. Generate votes according to the true ranking and some amount of noise. That is, if A if ranked better than B in the true ranking, then the vote is A>B with 90% chance if we had 10% of noise.
-3. Measure how good the resulting ranking is by comparing the true ranking from the computed ranking. The measure used is a comparison of the top 10% measuring how many entries of the computed top 10% were not in the real top 10%. In other words it's a relative measure of the intersection of the top 10% between the true and computed ranking. The pseudo formula for lists of size 100 is $1-|\mathrm{Top10(A)}\cap\mathrm{Top10(B)}|/10$. This top10% measure is a [pseudo-distance](https://en.wikipedia.org/wiki/Pseudometric_space) on lists and the smaller the number the better.
+3. Aggregate the votes and generate the computed ranking according to the voting system under consideration.
+4. Evaluate the quality of the computed ranking by comparing it to the true ranking. The comparison focuses on the top 10% of entries, by measuring how many items of the true top 10% are missing from the computed top 10%. In other words, it's a measure of relative overlap between the top 10% of the true and computed rankings. The pseudo formula for lists of size 100 is $1-|\mathrm{Top10(A)}\cap\mathrm{Top10(B)}|/10$. This `top10%` measure is a [pseudo-distance](https://en.wikipedia.org/wiki/Pseudometric_space) on ranking lists and smaller values indicate a better match.
 
 The best voting systems should correctly infer the true ranking from the aggregation of individual rankings.
 
